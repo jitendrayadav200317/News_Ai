@@ -17,13 +17,17 @@ export const login = async (req, res) => {
         message: "password do not match",
       });
     }
-    const token = jwt.sign({id:user._id, anme: user.name},'hello-this- is', {expiresIn: '1d'});
-    res.cookie('token',token,{
-      httpOnly : true
-    })
+    const token = jwt.sign(
+      { id: user._id, name: user.name },
+      'hello-this-is',
+      { expiresIn: "1d" }
+    );
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
     res.status(200).json({
-      message:"login successfull"
-    })
+      message: "login successfull",
+    });
   } catch (error) {
     return res.status(500).json({
       message: "save error",
