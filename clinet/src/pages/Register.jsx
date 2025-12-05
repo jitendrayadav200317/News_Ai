@@ -1,17 +1,23 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Button } from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { registerUser } from "../redux/slice/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 
-function Register() {
+const Register = () => {
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector((state) => state.auth);
+
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
+    dispatch(registerUser(data));
     console.log(data);
-
-  }
+  };
 
   return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
@@ -29,7 +35,7 @@ function Register() {
               type="text"
               placeholder="Enter Email..."
               className="focus:outline-none border-b w-full border-gray-200 "
-              {...register('name')}
+              {...register("name")}
             />
           </div>
 
@@ -39,7 +45,7 @@ function Register() {
               type="email"
               placeholder="Enter Email..."
               className="focus:outline-none border-b w-full border-gray-200 "
-              {...register('email')}
+              {...register("email")}
             />
           </div>
 
@@ -49,7 +55,7 @@ function Register() {
               type="password"
               placeholder="Enter Pass..."
               className="focus:outline-none border-b w-full border-gray-200"
-              {...register('password')}
+              {...register("password")}
             />
           </div>
           <div className="flex gap-2">
@@ -58,19 +64,24 @@ function Register() {
               type="password"
               placeholder="confram Pass..."
               className="focus:outline-none border-b w-full border-gray-200"
-              {...register('conframPassword')}
+              {...register("conframPassword")}
             />
           </div>
 
-          <Button type="submit" fullWidth>Register</Button>
-          <p className="text-center text-gray-800">Already have an account?
-          <Link to="/login" className="text-sky-500 hover:underline">
-            Login
-          </Link>
+          <Button type="submit" fullWidth>
+            {" "}
+            {loading ? <Loader size={20}  color="white"/> : "Register"} 
+          </Button>
+
+          <p className="text-center text-gray-800">
+            Already have an account?
+            <Link to="/login" className="text-sky-500 hover:underline">
+              Login
+            </Link>
           </p>
         </form>
       </motion.div>
     </div>
   );
-}
+};
 export default Register;

@@ -4,12 +4,24 @@ import { Button } from "@mantine/core";
 import { Lock, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const loginSchema = z.object({
+      email: z
+        .string()
+        .min(1, { message: "this is has to be filled." })
+        .email("this is valid email."),
+      password: z.string(),
+    });
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState:{errors} } = useForm({
+    resolver:zodResolver(loginSchema)
+  });
   const onSubmit = (data) => {
     console.log(data);
   };
+  
 
   return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
@@ -30,6 +42,7 @@ function Login() {
               className="focus:outline-none border-b w-full border-gray-200"
               {...register("email")}
             />
+            {errors.email && <p> {errors.email.message} </p> }
           </div>
 
           <div className="flex gap-2">

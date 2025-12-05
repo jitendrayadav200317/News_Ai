@@ -8,11 +8,7 @@ function Prefencer() {
 
   const toggleCategory = (category) => {
     setSelectedCatagory((prev) => {
-      return prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category];
-    });
-  };
+      return prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]})};
 
   console.log(selectedCatagory);
 
@@ -34,6 +30,7 @@ function Prefencer() {
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            key={category}
             className={`shadow-md  rounded-xl flex justify-center items-center gap-4 px-5 py-4 ${
               selectedCatagory.includes(category) && "bg-blue-500 text-white"
             }`}

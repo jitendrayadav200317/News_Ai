@@ -1,6 +1,7 @@
 import React from "react";
-import '@mantine/core/styles.css';
-import { Route , Routes } from "react-router-dom";
+import "@mantine/core/styles.css";
+import { Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 
 import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/Login.jsx";
@@ -10,6 +11,7 @@ import Prefencer from "./pages/Prefencre.jsx";
 function App() {
   return (
     <div>
+      <Toaster />
       <Navbar />
       <Prefencer />
       <Routes>
