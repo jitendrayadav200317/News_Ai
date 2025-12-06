@@ -17,11 +17,9 @@ export const login = async (req, res) => {
         message: "password do not match",
       });
     }
-    const token = jwt.sign(
-      { id: user._id, name: user.name },
-      'hello-this-is',
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user._id, name: user.name }, "hello-this-is", {
+      expiresIn: "1d",
+    });
     res.cookie("token", token, {
       httpOnly: true,
     });
@@ -32,6 +30,18 @@ export const login = async (req, res) => {
     return res.status(500).json({
       message: "save error",
       error: error.message,
+    });
+  }
+};
+
+export const verify = async (req, res) => {
+  console.log(req.user);
+  if (!req.user) {
+  } else {
+    return res.status(200).json({
+      authenticated: true,
+      id: req.user.id,
+      name: req.user.id,
     });
   }
 };

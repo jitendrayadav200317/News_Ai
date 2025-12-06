@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/slice/authSlice";
 
 const loginSchema = z.object({
       email: z
@@ -15,11 +17,13 @@ const loginSchema = z.object({
       password: z.string(),
     });
 function Login() {
+  const dispatch = useDispatch()
   const { register, handleSubmit, formState:{errors} } = useForm({
     resolver:zodResolver(loginSchema)
   });
   const onSubmit = (data) => {
     console.log(data);
+    dispatch(loginUser(data))
   };
   
 
