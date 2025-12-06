@@ -2,30 +2,40 @@ import React from "react";
 import { motion } from "motion/react";
 import { Button } from "@mantine/core";
 import { Lock, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/slice/authSlice";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
-      email: z
-        .string()
-        .min(1, { message: "this is has to be filled." })
-        .email("this is valid email."),
-      password: z.string(),
-    });
+  email: z
+    .string()
+    .min(1, { message: "this is has to be filled." })
+    .email("this is valid email."),
+  password: z.string(),
+});
 function Login() {
-  const dispatch = useDispatch()
-  const { register, handleSubmit, formState:{errors} } = useForm({
-    resolver:zodResolver(loginSchema)
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { authenticated } = useSelector((state) =>state.auth);
+  useEffect(() => {
+    if (authenticated) {
+      navigate("/");
+    }
+  }, [authenticated]);
+
+  const { register,handleSubmit,formState: { errors },} = useForm({
+    resolver: zodResolver(loginSchema),
   });
   const onSubmit = (data) => {
     console.log(data);
-    dispatch(loginUser(data))
+    dispatch(loginUser(data));
   };
-  
 
   return (
     <div className="flex h-screen justify-center items-center bg-gray-100">
@@ -46,7 +56,7 @@ function Login() {
               className="focus:outline-none border-b w-full border-gray-200"
               {...register("email")}
             />
-            {errors.email && <p> {errors.email.message} </p> }
+            {errors.email && <p> {errors.email.message} </p>}
           </div>
 
           <div className="flex gap-2">
@@ -66,7 +76,7 @@ function Login() {
           <p className="text-center text-gray-800">
             Don't have an account?
             <Link to="/register" className="text-sky-500 hover:underline">
-               Register
+              Register
             </Link>
           </p>
         </form>

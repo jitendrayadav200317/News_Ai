@@ -1,9 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
+import { setCookies } from "../../utils/util";
+
 
 const initialState = {
   loading: false,
+  authenticated : false,
+  name: "",
+  id : null
 };
 // register user api
 export const registerUser = createAsyncThunk(
@@ -33,7 +38,8 @@ export const loginUser = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/auth/verify`,
           { withCredentials: true }
       );
-      return res.data;
+      // return res.data;
+      return {...res.data, ...verifyres.data}
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -64,6 +70,17 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.authenticated = action.payload.authenticated;
+        state.name = action.payload.name;
+        state.id = action.payload.id;
+
+        setCookies('isAuthenticated', action.payload.authenticated);
+        setCookies('name',action.payload.name);
+        setCookies('id' , action.payload.id)
+
+        console.log(action.payload);
+        toast.success(action.payload.message)
+        
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
