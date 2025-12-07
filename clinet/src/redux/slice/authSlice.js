@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
-import { setCookies } from "../../utils/util";
-
+import { removeCookies, setCookies, getCookies } from "../../utils/util";
 
 const initialState = {
   loading: false,
-  authenticated : false,
-  name: "",
-  id : null
+  authenticated: getCookies("isAuthenticated") || false,
+  name: getCookies("name") || null,
+  id: getCookies("id") || null,
+  preferences: [],
 };
 // register user api
 export const registerUser = createAsyncThunk(
@@ -32,14 +32,15 @@ export const loginUser = createAsyncThunk(
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login`,
-        data, { withCredentials: true }
+        data,
+        { withCredentials: true }
       );
       const verifyres = await axios.get(
         `${import.meta.env.VITE_API_URL}/auth/verify`,
-          { withCredentials: true }
+        { withCredentials: true }
       );
       // return res.data;
-      return {...res.data, ...verifyres.data}
+      return { ...res.data, ...verifyres.data };
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -49,6 +50,16 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {
+    singOut: function (state) {
+      state.authenticated = false;
+      state.id = null;
+      state.name = null;
+      removeCookies("isAuthenticated");
+      removeCookies("name");
+      removeCookies("id");
+    },
+  },
   extraReducers: (builder) => {
     builder
       // register case
@@ -73,14 +84,14 @@ const authSlice = createSlice({
         state.authenticated = action.payload.authenticated;
         state.name = action.payload.name;
         state.id = action.payload.id;
+        state.preferences = action.payload.preferences;
 
-        setCookies('isAuthenticated', action.payload.authenticated);
-        setCookies('name',action.payload.name);
-        setCookies('id' , action.payload.id)
+        setCookies("isAuthenticated", action.payload.authenticated);
+        setCookies("name", action.payload.name);
+        setCookies("id", action.payload.id);
 
         console.log(action.payload);
-        toast.success(action.payload.message)
-        
+        toast.success(action.payload.message);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -89,3 +100,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
+export const { singOut } = authSlice.actions;

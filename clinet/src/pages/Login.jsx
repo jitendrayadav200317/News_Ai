@@ -22,10 +22,12 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { authenticated } = useSelector((state) =>state.auth);
+  const { authenticated,preferences } = useSelector((state) =>state.auth);
   useEffect(() => {
-    if (authenticated) {
+    if (authenticated  && preferences.length > 0) {
       navigate("/");
+    }else if(authenticated && preferences <= 0){
+      navigate("/preferences")
     }
   }, [authenticated]);
 

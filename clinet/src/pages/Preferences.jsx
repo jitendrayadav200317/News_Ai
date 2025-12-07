@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Button } from "@mantine/core";
 import { CircleCheckBig } from "lucide-react";
 
-function Prefencer() {
+function Preferences() {
   const [selectedCatagory, setSelectedCatagory] = useState([]);
 
   const toggleCategory = (category) => {
@@ -47,4 +47,4 @@ function Prefencer() {
     </div>
   );
 }
-export default Prefencer;
+export default Preferences;

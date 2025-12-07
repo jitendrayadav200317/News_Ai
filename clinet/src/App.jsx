@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy } from "react";
 import "@mantine/core/styles.css";
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -6,23 +6,29 @@ import { Toaster } from "sonner";
 import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import Prefencer from "./pages/Prefencre.jsx";
-import Home from "./pages/Home.jsx";
+import Preferences from "./pages/Preferences.jsx";
+// import Home from "./pages/Home.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
+import LodingSpnner from "./components/LodingSpnner.jsx";
+import { Suspense } from "react";
+
+const Home = lazy(()=>(import('./pages/Home.jsx')))
 
 function App() {
   return (
     <div>
-
       <Navbar />
       <Toaster />
-      <Routes>
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<Home />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+      <Suspense fallback={ <LodingSpnner /> } >
+        <Routes>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/Preferences" element={<Preferences />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }

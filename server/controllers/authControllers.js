@@ -24,6 +24,7 @@ export const login = async (req, res) => {
       httpOnly: true,
     });
     res.status(200).json({
+      preferences : user.preferences,
       message: "login successfull",
     });
   } catch (error) {

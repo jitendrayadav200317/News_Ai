@@ -2,13 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Button } from "@mantine/core";
-// import { X, Menu } from "lucide-react";
+import { useSelector } from "react-redux";
+import ProfileDropDown from "./ProfileDropDown.jsx";
 
 function Navbar() {
-  // const [isOpen , setIsopen] = useState(false);
-  // const handelClick = ()=>{
-  //   setIsopen(!isOpen)
-  // }
+  const { authenticated } = useSelector((state) => state.auth);
 
   return (
     <nav className="h-16 p-2">
@@ -34,14 +32,18 @@ function Navbar() {
             </motion.li>
           ))}
         </ul>
-
         <div className="flex justify-center items-center">
-          <Link to="/login">
-            <Button variant="white">Login</Button>
-          </Link>
-          <Link to="register">
-            <Button variant="white">Register</Button>
-          </Link>
+          {!authenticated && (
+            <div className="flex gap-6">
+              <Link to="/login">
+                <Button variant="white">Login</Button>
+              </Link>
+              <Link to="register">
+                <Button variant="white">Register</Button>
+              </Link>
+            </div>
+          )}
+          {authenticated && <ProfileDropDown/>}
         </div>
       </div>
     </nav>
