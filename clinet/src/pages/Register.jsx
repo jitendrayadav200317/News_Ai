@@ -69,7 +69,6 @@ const Register = () => {
           </div>
 
           <Button type="submit" fullWidth>
-            {" "}
             {loading ? <Loader size={20}  color="white"/> : "Register"} 
           </Button>
 

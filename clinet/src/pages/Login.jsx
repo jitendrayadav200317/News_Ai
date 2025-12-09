@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Button } from "@mantine/core";
+import { Button , Loader} from "@mantine/core";
 import { Lock, Mail } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -18,20 +18,25 @@ const loginSchema = z.object({
   password: z.string(),
 });
 function Login() {
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { authenticated,preferences } = useSelector((state) =>state.auth);
+  const { authenticated, preferences, loading } = useSelector(
+    (state) => state.auth
+  );
   useEffect(() => {
-    if (authenticated  && preferences.length > 0) {
+    if (authenticated && preferences.length > 0) {
       navigate("/");
-    }else if(authenticated && preferences <= 0){
-      navigate("/preferences")
+    } else if (authenticated && preferences <= 0) {
+      navigate("/preferences");
     }
   }, [authenticated]);
 
-  const { register,handleSubmit,formState: { errors },} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(loginSchema),
   });
   const onSubmit = (data) => {
@@ -72,7 +77,7 @@ function Login() {
           </div>
 
           <Button type="submit" fullWidth>
-            login
+            {loading ? <Loader color="white" size={20}/> : "login"}
           </Button>
 
           <p className="text-center text-gray-800">

@@ -8,7 +8,7 @@ const initialState = {
   authenticated: getCookies("isAuthenticated") || false,
   name: getCookies("name") || null,
   id: getCookies("id") || null,
-  preferences: [],
+  preferences: JSON.parse(localStorage.getItem('preferences')) || [],
 };
 // register user api
 export const registerUser = createAsyncThunk(
@@ -85,6 +85,7 @@ const authSlice = createSlice({
         state.name = action.payload.name;
         state.id = action.payload.id;
         state.preferences = action.payload.preferences;
+        localStorage.setItem('preferences',JSON.stringify(action.payload.preferences))
 
         setCookies("isAuthenticated", action.payload.authenticated);
         setCookies("name", action.payload.name);
@@ -95,6 +96,8 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
+        console.log(action.payload);
+        toast.error(action.payload.response.data.message)
       });
   },
 });
