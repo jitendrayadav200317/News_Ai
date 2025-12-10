@@ -11,14 +11,9 @@ const initialState = {
   preferences: JSON.parse(localStorage.getItem('preferences')) || [],
 };
 // register user api
-export const registerUser = createAsyncThunk(
-  "/auth/register",
-  async (data, { rejectWithValue }) => {
+export const registerUser = createAsyncThunk("/auth/register",async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        data
-      );
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, data );
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -26,19 +21,10 @@ export const registerUser = createAsyncThunk(
   }
 );
 // login user Api
-export const loginUser = createAsyncThunk(
-  "/auth/login",
-  async (data, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk( "/auth/login", async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
-        data,
-        { withCredentials: true }
-      );
-      const verifyres = await axios.get(
-        `${import.meta.env.VITE_API_URL}/auth/verify`,
-        { withCredentials: true }
-      );
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,data, { withCredentials: true } );
+      const verifyres = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`,{ withCredentials: true } );
       // return res.data;
       return { ...res.data, ...verifyres.data };
     } catch (error) {

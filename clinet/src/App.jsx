@@ -11,7 +11,8 @@ import Preferences from "./pages/Preferences.jsx";
 // import Home from "./pages/Home.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import LodingSpnner from "./components/LodingSpnner.jsx";
-import PreferencesProct from "./components/preferencesProct.jsx";
+import PreferencesProct from "./components/PreferencesProtect.jsx";
+
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 
