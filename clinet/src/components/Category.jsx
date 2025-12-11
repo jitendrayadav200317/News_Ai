@@ -1,17 +1,33 @@
+import { Tabs } from "@mantine/core";
 import React from "react";
-import { Avatar, Button, Tabs } from "@mantine/core";
-import { Bookmark, Heart, BotMessageSquare, Cog } from "lucide-react";
-import { getCookies } from "../utils/util";
 
-function Profile() {
+function Catagory() {
+  const category = [
+    "Genral",
+    "Sport",
+    "Political",
+    "Business",
+    "Entertinment",
+    "Movies",
+  ];
   return (
-    <div className="">
-      <Avatar size="xl" />
-      <text>{getCookies('name')} </text>
-      <text>{getCookies('email')} </text>
-      <Button variant="outline">Edit profile</Button>
+    <div className="text-center space-y-10 font-bold text-2xl">
+      <h1>Categories</h1>
       <Tabs defaultValue="gallery">
         <Tabs.List>
+          {category.map((cat) => (
+            <Tabs.Tab value={cat} key={cat}> {cat} </Tabs.Tab>
+          ))}
+        </Tabs.List>
+      </Tabs>
+    </div>
+  );
+}
+export default Catagory;
+
+{
+  /* 
+       
           <Tabs.Tab
             value="Bookmark"
             leftSection={<Bookmark size={20} color="orange" />}
@@ -30,7 +46,7 @@ function Profile() {
           >
             BotMessageSquare
           </Tabs.Tab>
-        </Tabs.List>
+       
 
         <Tabs.Panel value="Bookmark">Gallery tab content</Tabs.Panel>
 
@@ -38,8 +54,5 @@ function Profile() {
         <Tabs.Panel value="AI-Recommandation">Messages tab content</Tabs.Panel>
 
         <Tabs.Panel value="Preferences">Settings tab content</Tabs.Panel>
-      </Tabs>
-    </div>
-  );
+       */
 }
-export default Profile;
