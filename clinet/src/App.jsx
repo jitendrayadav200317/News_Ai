@@ -15,6 +15,7 @@ import PreferencesProct from "./components/PreferencesProct.jsx"
 
 
 const Home = lazy(() => import("./pages/Home.jsx"));
+const Profile = lazy(()=>import("./pages/Profile.jsx"))
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<Home />} />
+            <Route path="/Profile" element={<Profile />} />
+
             <Route element={<PreferencesProct />}>
               <Route path="/Preferences" element={<Preferences />} />
             </Route>

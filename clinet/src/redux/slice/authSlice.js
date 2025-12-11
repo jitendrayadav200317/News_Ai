@@ -8,6 +8,7 @@ const initialState = {
   authenticated: getCookies("isAuthenticated") || false,
   name: getCookies("name") || null,
   id: getCookies("id") || null,
+  email: getCookies("email") || null,
   preferences: JSON.parse(localStorage.getItem('preferences')) || [],
 };
 // register user api
@@ -44,6 +45,7 @@ const authSlice = createSlice({
       removeCookies("isAuthenticated");
       removeCookies("name");
       removeCookies("id");
+      removeCookies("email");
     },
   },
   extraReducers: (builder) => {
@@ -74,6 +76,7 @@ const authSlice = createSlice({
         localStorage.setItem('preferences',JSON.stringify(action.payload.preferences))
 
         setCookies("isAuthenticated", action.payload.authenticated);
+        setCookies("email", action.payload.email);
         setCookies("name", action.payload.name);
         setCookies("id", action.payload.id);
 

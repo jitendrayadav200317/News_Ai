@@ -9,21 +9,45 @@ import { Link } from "react-router-dom";
 import {  z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+const passwordSchema = z
+  .string()
+  .min(8, { message: "password should be at lest 8 charater long" })
+  .superRefine((value, ctx) => {
+    if (!/[A-Z]/.test(value)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "require 1 uppercase cass",
+      });
+    }
+    if (!/[a-z]/.test(value)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "require 1 lovercase cass",
+      });
+    }
+    if (!/[0-9]/.test(value)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "require one",
+      });
+    }
+  });
+
 const registerSchema = z.object({
-  name: z.string()
-     .min(4, { message: "Name should contain at 4 charater long..." }),
-  email: z
-    .string()
-    .min(1, { message: "this is has to be filled..." })
-    .email("this is valid email."),
-  password: z.string().min(8,{message:"password should be at lest 8 charater long"}),
-  confirmPassword: z
-    .string()
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "password do not match",
-      path: ["confirmPassword"],
-    }),
-});
+    name: z
+      .string()
+      .min(4, { message: "Name should contain at 4 charater long..." }),
+    email: z
+      .string()
+      .min(1, { message: "this is has to be filled..." })
+      .email("this is not a valid email..."),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "password do not match",
+    path: ["confirmPassword"],
+  });
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -86,7 +110,7 @@ const Register = () => {
               type="password"
               placeholder="confram Pass..."
               className="bg-transparent focus:outline-none border-b w-full border-gray-200"
-              {...register("conframPassword")}
+              {...register("confirmPassword")}
             />
              {errors.confirmPassword && <p className="text-red-500 text-sm"> {errors.confirmPassword.message} </p>}
           </div>

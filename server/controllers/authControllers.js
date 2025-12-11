@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password ,name} = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
@@ -17,7 +17,7 @@ export const login = async (req, res) => {
         message: "password do not match",
       });
     }
-    const token = jwt.sign({ id: user._id, name: user.name }, "hello-this-is", {
+    const token = jwt.sign({ id: user._id, name:user.name , user: user.email}, "hello-this-is", {
       expiresIn: "1d",
     });
     res.cookie("token", token, {
@@ -43,7 +43,8 @@ export const verify = async (req, res) => {
     return res.status(200).json({
       authenticated: true,
       id: req.user.id,
-      name: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
     });
   }
 };
