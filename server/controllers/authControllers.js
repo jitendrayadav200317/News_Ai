@@ -22,9 +22,10 @@ export const login = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
+      maxAge: 15 * 24 * 60,
     });
     res.status(200).json({
-      preferences : user.preferences,
+      preferences: user.preferences,
       message: "login successfull",
     });
   } catch (error) {

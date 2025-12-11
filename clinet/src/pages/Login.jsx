@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Button , Loader} from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { Lock, Mail } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -13,9 +13,9 @@ import { useEffect } from "react";
 const loginSchema = z.object({
   email: z
     .string()
-    .min(1, { message: "this is has to be filled." })
-    .email("this is valid email."),
-  password: z.string(),
+    .min(1, { message: "this is has to be filled..." })
+    .email("this is valid email..."),
+  password: z.string().min(1, { message: "password is required.." }),
 });
 function Login() {
   const navigate = useNavigate();
@@ -32,11 +32,7 @@ function Login() {
     }
   }, [authenticated]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register,  handleSubmit, formState: { errors },} = useForm({
     resolver: zodResolver(loginSchema),
   });
   const onSubmit = (data) => {
@@ -55,29 +51,30 @@ function Login() {
         <h1 className="text-center mb-4">Welcome Back</h1>
 
         <form className="space-y-6 w-full" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex gap-2">
-            <Lock />
+          <div className="flex gap-2 items-center pb-2 border-gray-300">
+            <Lock className="text-gray-400 mr-2" size={20}/>
             <input
               type="email"
               placeholder="Enter Email..."
-              className="focus:outline-none border-b w-full border-gray-200"
+              className="bg-transparent focus:outline-none border-b w-full border-gray-200"
               {...register("email")}
             />
-            {errors.email && <p> {errors.email.message} </p>}
+            {errors.email && <p className="text-red-500 text-sm"> {errors.email.message} </p>}
           </div>
 
-          <div className="flex gap-2">
-            <Mail />
+          <div className="flex gap-2 items-center pb-2 border-gray-300">
+            <Mail className="text-gray-400 mr-2" size={20}/>
             <input
               type="password"
               placeholder="Enter Pass..."
-              className="focus:outline-none border-b w-full border-gray-200"
+              className="bg-transparent focus:outline-none border-b w-full border-gray-200"
               {...register("password")}
             />
+            {errors.password && <p className="text-red-500 text-sm"> {errors.password.message} </p>}
           </div>
 
           <Button type="submit" fullWidth>
-            {loading ? <Loader color="white" size={20}/> : "login"}
+            {loading ? <Loader color="white" size={20} /> : "login"}
           </Button>
 
           <p className="text-center text-gray-800">
