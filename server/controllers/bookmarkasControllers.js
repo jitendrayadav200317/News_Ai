@@ -1,4 +1,3 @@
-import { use } from "react";
 import User from "../model/User.js";
 
 export const addBookmark = async (req, res) => {
@@ -48,7 +47,8 @@ export const revoveBookmarks = async(req,res) => {
             return res.status(404).json({
                 message:"user not found"
             })
-        }user.bookmarks = user.bookmarks.filter(b=> b._id !== articleId)
+        }user.bookmarks = user.bookmarks.filter(b=> b._id !== articleId);
+        res.status(200).jsonz({message:"bookmark removed"})
 
     } catch (error) {
         
