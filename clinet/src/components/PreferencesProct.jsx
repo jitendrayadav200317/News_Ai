@@ -5,8 +5,8 @@ import { Outlet , Navigate } from "react-router-dom";
 function PreferencesProct(){
 
     const { preference} = useSelector((state)=>state.auth)
-    if (preference.length > 0) {
-        return <Navigate to='/' />
+    if (preference.length > 0 && Array.isArray(preference)) {
+        return <Navigate to='/Home' replace/>
     }
 
     return(
