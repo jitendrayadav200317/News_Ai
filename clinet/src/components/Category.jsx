@@ -1,93 +1,76 @@
 import { Tabs } from "@mantine/core";
 import axios from "axios";
-import React from "react";
-import { useState } from "react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-function Catagory() {
-  const [Catagory, setCategory] = useState("Genral");
+function Category() {
+  const [category, setCategory] = useState("Genral");
 
-  const categorie = [
-    "Genral",
-    "Sport",
-    "Political",
+  const categories = [
+    "General",
+    "Sports",
     "Business",
-    "Entertinment",
-    "Movies",
-    "science",
+    "Entertainment",
+    "Science",
+    "Technology",
+    "Health",
   ];
-  const fetchNewsByCategory = async (pageParams= 1) => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/news/${Catagory} `,{params:{page:pageParams}}
-      );
-      return res.data;
-    } catch (error) {
-      console.log(error);
-    }
-    const { data} = useQuery({
-      queryKey:['name'],
-      queryFn:fetchNewsByCategory
-    })
-    console.log('data',data);
-    
+
+  const fetchNewsByCategory = async ({ pageParam = 1 }) => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/news/${category}`,
+      {
+        params: { page: pageParam },
+      }
+    );
+    return res.data;
   };
-  const {data,hasNextPage,fetchNextPage ,status }= useInfiniteQuery({
-    queryKey: ["category", Catagory],
+
+  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
+    queryKey: ["category", category],
     queryFn: fetchNewsByCategory,
-    getNextPageParam: (lastPage) => {
-      console.log("lastPage", lastPage);
-      return lastPage.nextPage;
-    },
+    getNextPageParam: (lastPage) => lastPage?.nextPage ?? false,
   });
-  console.log(data);
-  
+
+
+  const news = data?.pages.flatMap((page) => page.news) ?? [];
 
   return (
     <div className="text-center space-y-10 font-bold text-2xl">
-      <h1 className="text-center space-y-10 my-6 font-bold text-2xl">Categories</h1>
-      <Tabs defaultValue="gallery" onChange={(value) => setCategory(value.toLowerCase())}>
+      <h1 className="my-6">Categories</h1>
+
+      <Tabs value={category} onChange={setCategory}>
         <Tabs.List>
-          {categorie.map((cat) => (
+          {categories.map((cat) => (
             <Tabs.Tab value={cat} key={cat}>
               {cat}
             </Tabs.Tab>
           ))}
         </Tabs.List>
       </Tabs>
+
+      <InfiniteScroll
+        dataLength={news.length}
+        next={fetchNextPage}
+        hasMore={!!hasNextPage}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        {news.map((item, index) => (
+          item.news.map((article)=>{
+            console.log(article);
+            
+          })
+          
+        ))}
+      </InfiniteScroll>
     </div>
   );
 }
-export default Catagory;
 
-{
-  /* 
-       
-          <Tabs.Tab
-            value="Bookmark"
-            leftSection={<Bookmark size={20} color="orange" />}
-          >
-            Gallery
-          </Tabs.Tab>
-          <Tabs.Tab value="Like" leftSection={<Heart size={20} color="red" />}>
-            Like News
-          </Tabs.Tab>
-          <Tabs.Tab value="Preferences" leftSection={<Cog size={20} />}>
-            Preferences
-          </Tabs.Tab>
-          <Tabs.Tab
-            value="AI-Recommandation"
-            leftSection={<BotMessageSquare size={20} color="blue" />}
-          >
-            BotMessageSquare
-          </Tabs.Tab>
-       
-
-        <Tabs.Panel value="Bookmark">Gallery tab content</Tabs.Panel>
-
-        <Tabs.Panel value="Like">Messages tab content</Tabs.Panel>
-        <Tabs.Panel value="AI-Recommandation">Messages tab content</Tabs.Panel>
-
-        <Tabs.Panel value="Preferences">Settings tab content</Tabs.Panel>
-       */
-}
+export default Category;

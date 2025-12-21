@@ -15,22 +15,22 @@ export const preferences = async (req, res) => {
   } catch (error) {}
 };
 
-export const fetehNewsByCategory = async (req, res) => {
+export const fetchNewsByCategory = async (req, res) => {
   const { category } = req.params;
   const { page = 1 } = req.query;
-  const pageSize = 10
+  const pageSize = 10;
   console.log(page);
-  
+
   try {
     const response = await axios.get(
-      `https://newsapi.org/v2/top-headlines?page=${page}&pageSize=${pageSize}&Category=${category}&country=us&apiKey=${process.env.NEWS_API_KEY}`
+      `https://newsapi.org/v2/top-headlines?page=${page}&pageSize=${pageSize}&category=${category}&country=us&apiKey=${process.env.NEWS_API_KEY}`
     );
-    
-      res.status(200).json({
-        news: response.data.articles,
-        length: response.data.articles.length,
-        nextPage: response.data.articles.length === pageSize ? Number(page) +1 : null,
-      });
-    
+
+    res.status(200).json({
+      news: response.data.articles,
+      length: response.data.articles.length,
+      nextPage:
+        response.data.articles.length === pageSize ? Number(page) + 1 : null,
+    });
   } catch (error) {}
 };
