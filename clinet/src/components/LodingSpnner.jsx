@@ -1,4 +1,4 @@
-import { Loader } from "lucide-react";
+import { Loader } from "@mantine/core";
 import react from "react";
 
 function LodingSpnner(){

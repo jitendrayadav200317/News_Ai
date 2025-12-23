@@ -10,7 +10,9 @@ import Register from "./pages/Register.jsx";
 import Preferences from "./pages/Preferences.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import LodingSpnner from "./components/LodingSpnner.jsx";
-import PreferencesProct from "./components/PreferencesProct.jsx"
+// import PreferencesProct from "./components/PreferencesProct.jsx"
+import PreferencesProct from "./components/preferencesProct.jsx";
+import Footer from "./components/Footer.jsx";
 
 
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -36,6 +38,7 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Routes>
       </Suspense>
+      <Footer />
     </div>
   );
 }

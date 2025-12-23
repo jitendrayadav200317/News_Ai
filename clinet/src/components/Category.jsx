@@ -3,6 +3,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
+import ArticleCard from "./ArticleCard";
+import { Skeleton } from "@mantine/core";
 
 function Category() {
   const [category, setCategory] = useState("Genral");
@@ -67,17 +69,29 @@ function Category() {
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
             </p>
-          }>
-            {
-            data?.pages.map((page,index)=>{
-              page.news.map((article)=>{
-                console.log(article);
-                
-              })
-              
-            })
           }
-          </InfiniteScroll>
+        >
+          {isLoading ? (
+            <div className="space-y-6">
+              <Skeleton height={500} />
+              <Skeleton height={20} />
+              <Skeleton height={30} />
+            </div>
+          ) : (
+          <div className="space-y-6">
+              {data?.pages.length >= 0 &&
+                data?.pages.map((page, index) =>
+                  page.news.map((article) => (
+                    <ArticleCard
+                      key={article._id || article.url}
+                      article={article}
+                      category={category}
+                    />
+                  ))
+                )}
+            </div>
+          )}
+        </InfiniteScroll>
       </div>
     </div>
   );
