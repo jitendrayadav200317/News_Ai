@@ -4,14 +4,15 @@ import { Button } from "@mantine/core";
 import { CircleCheckBig } from "lucide-react";
 import { Slide } from "react-awesome-reveal";
 import { setPreferences } from "../redux/slice/newsSlice.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-
 
 function Preferences() {
   const [selectedCatagory, setSelectedCatagory] = useState([]);
+  const { loading, error } = useSelector((state) => state.news);
+
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const toggleCategory = (category) => {
     setSelectedCatagory((prev) => {
@@ -21,9 +22,11 @@ function Preferences() {
     });
   };
 
-  const handelSavePreferneces = async () => {
-    await dispatch(setPreferences({preferences: selectedCatagory}))
-    navigate('/')
+  const handelSavePreferneces = () => {
+    dispatch(setPreferences({ preferences: selectedCatagory }))
+      .unwrap()
+      .then(() => navigate("/"))
+      .catch((error) => console.error("Error saving preferences:", error));
   };
 
   const categories = [
@@ -56,9 +59,15 @@ function Preferences() {
             </motion.div>
           ))}
         </div>
-        <div className="py-7">
-          <Button onClick={handelSavePreferneces}>Save Preferences</Button>
-        </div>
+
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <Button
+          onClick={handelSavePreferneces}
+          disabled={loading}
+          className="mt-4"
+        >
+          {loading ? <Loader size="sm" color="white" /> : "Save Preferences"}
+        </Button>
       </div>
     </Slide>
   );

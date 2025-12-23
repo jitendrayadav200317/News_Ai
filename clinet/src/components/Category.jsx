@@ -18,27 +18,29 @@ function Category() {
   ];
 
   const fetchNewsByCategory = async ({ pageParam = 1 }) => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/news/${category}`,
-      {
-        params: { page: pageParam },
-      }
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/news/${category}?page=${pageParam}&pageSize=10`
     );
-    return res.data;
+    return response.data;
   };
+  const { data, hasNextPage, fetchNextPage, status, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["category", category],
+      queryFn: fetchNewsByCategory,
+      getNextPageParam: (lastPage) => {
+        // console.log('lastPage: ', lastPage);
 
-  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
-    queryKey: ["category", category],
-    queryFn: fetchNewsByCategory,
-    getNextPageParam: (lastPage) => lastPage?.nextPage ?? false,
-  });
-
-
-  const news = data?.pages.flatMap((page) => page.news) ?? [];
-
+        return lastPage.nextPage;
+      },
+    });
+  console.log(data);
   return (
-    <div className="text-center space-y-10 font-bold text-2xl">
-      <h1 className="my-6">Categories</h1>
+    <div className="py-12 px-10 max-w-5xl mx-auto">
+      <h1 className="text-center space-y-10 my-6 font-bold text-3xl">
+        Categories
+      </h1>
 
       <Tabs value={category} onChange={setCategory}>
         <Tabs.List>
@@ -49,26 +51,34 @@ function Category() {
           ))}
         </Tabs.List>
       </Tabs>
-
-      <InfiniteScroll
-        dataLength={news.length}
-        next={fetchNextPage}
-        hasMore={!!hasNextPage}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        }
-      >
-        {news.map((item, index) => (
-          item.news.map((article)=>{
-            console.log(article);
-            
-          })
-          
-        ))}
-      </InfiniteScroll>
+      <div className="mt-14">
+        <InfiniteScroll
+          dataLength={
+            data?.pages.length >= 0 &&
+            data?.pages.reduce(
+              (total, page) => total + page.news.length,
+              0 || 0
+            )
+          }
+          next={fetchNextPage}
+          hasMore={hasNextPage}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }>
+            {
+            data?.pages.map((page,index)=>{
+              page.news.map((article)=>{
+                console.log(article);
+                
+              })
+              
+            })
+          }
+          </InfiniteScroll>
+      </div>
     </div>
   );
 }

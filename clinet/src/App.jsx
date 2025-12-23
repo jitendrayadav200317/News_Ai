@@ -24,7 +24,7 @@ function App() {
       <Suspense fallback={<LodingSpnner />}>
         <Routes>
           <Route element={<ProtectedRoutes />}>
-            <Route path="/Home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/Profile" element={<Profile />} />
 
             <Route element={<PreferencesProct />}>
