@@ -32,8 +32,6 @@ function Category() {
       queryKey: ["category", category],
       queryFn: fetchNewsByCategory,
       getNextPageParam: (lastPage) => {
-        // console.log('lastPage: ', lastPage);
-
         return lastPage.nextPage;
       },
     });
@@ -64,11 +62,13 @@ function Category() {
           }
           next={fetchNextPage}
           hasMore={hasNextPage}
-          loader={<p style={{ textAlign: "center" , marginTop :"20px"}}>
+          loader={
+            <p style={{ textAlign: "center", marginTop: "20px" }}>
               <b>Loading...</b>
-            </p>}
+            </p>
+          }
           endMessage={
-            <p style={{ textAlign: "center" , marginTop :"20px"}}>
+            <p style={{ textAlign: "center", marginTop: "20px" }}>
               <b>NO More News</b>
             </p>
           }
@@ -80,7 +80,7 @@ function Category() {
               <Skeleton height={30} />
             </div>
           ) : (
-          <div className="space-y-6">
+            <div className="space-y-6">
               {data?.pages.length >= 0 &&
                 data?.pages.map((page, index) =>
                   page.news.map((article) => (
