@@ -7,7 +7,7 @@ import ArticleCard from "./ArticleCard";
 import { Skeleton } from "@mantine/core";
 
 function Category() {
-  const [category, setCategory] = useState("Genral");
+  const [category, setCategory] = useState("General");
 
   const categories = [
     "General",
@@ -64,10 +64,12 @@ function Category() {
           }
           next={fetchNextPage}
           hasMore={hasNextPage}
-          loader={<h4>Loading...</h4>}
+          loader={<p style={{ textAlign: "center" , marginTop :"20px"}}>
+              <b>Loading...</b>
+            </p>}
           endMessage={
-            <p style={{ textAlign: "center" }}>
-              <b>Yay! You have seen it all</b>
+            <p style={{ textAlign: "center" , marginTop :"20px"}}>
+              <b>NO More News</b>
             </p>
           }
         >
