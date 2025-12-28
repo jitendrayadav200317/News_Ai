@@ -8,7 +8,7 @@ console.log(process.env.GEMINI_API_KEY);
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const generateSummary = async (content) => {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   const response = await model.generateContent(
     `please summarize these content ${content}`
   );
@@ -52,5 +52,11 @@ export const newsSummarize = async (req, res) => {
       summary,
       fullarticle: url,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  res.status(500).json({
+    message: 'Failed to summarize article',
+    error: error.message,
+  });
+  }
 };

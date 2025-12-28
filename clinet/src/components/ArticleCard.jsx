@@ -1,4 +1,4 @@
-import {  Card,Image,Badge,Text,Group,ActionIcon,Flex,Popover,Tooltip} from "@mantine/core";
+import { Card,Image,Badge,Text,Group,ActionIcon,Flex,Popover,Tooltip} from "@mantine/core";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
