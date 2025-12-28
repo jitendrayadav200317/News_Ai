@@ -52,11 +52,7 @@ export const verify = async (req, res) => {
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if ((!name, !email, !password)) {
-      return res.status(400).json({
-        message: "file requirement",
-      });
-    }
+
     const user = await User.findOne({ email });
     if (user) {
       return res.status(409).json({

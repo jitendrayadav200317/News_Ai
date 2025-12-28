@@ -76,7 +76,7 @@ const Register = () => {
             <User className="text-gray-400 mr-2" size={20}/>
             <input
               type="text"
-              placeholder="Enter Email..."
+              placeholder="Enter Name..."
               className="bg-transparent focus:outline-none border-b w-full border-gray-200 "
               {...register("name")}
             />
