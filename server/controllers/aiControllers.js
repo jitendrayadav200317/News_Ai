@@ -3,7 +3,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 import NewsSummary from '../model/NewsSummary.js'
 dotenv.config();
-console.log(process.env.GEMINI_API_KEY);
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -28,10 +27,7 @@ export const newsSummarize = async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({ headless: true });
-    console.log(browser);
     const page = await browser.newPage();
-    console.log(page);
-
     await page.goto(url, { waitUntil: 'domcontentloaded' });
 
     const extractedText = await page.evaluate(() => {
@@ -41,12 +37,12 @@ export const newsSummarize = async (req, res) => {
     });
     await browser.close();
     const summary = await generateSummary(extractedText);
-    const newSSummary = new NewsSummary({
+    const newsSummary = new NewsSummary({
       url,
       summary,
     });
 
-    await newSSummary.save();
+    await newsSummary.save();
 
     res.status(200).json({
       summary,

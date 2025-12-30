@@ -7,8 +7,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/slice/authSlice";
 import { useEffect } from "react";
+
+import GoogleIcon from "../components/GoogleIcon";
+import { loginUser,signInWithGoogle } from "../redux/slice/authSlice";
+
 
 const loginSchema = z.object({
   email: z
@@ -76,6 +79,7 @@ function Login() {
           <Button type="submit" fullWidth>
             {loading ? <Loader color="white" size={20} /> : "login"}
           </Button>
+          <Button fullWidth variant="outline" onClick={()=>dispatch(signInWithGoogle())} leftSection={<GoogleIcon/>} > Login with Google</Button>
 
           <p className="text-center text-gray-800">
             Don't have an account?

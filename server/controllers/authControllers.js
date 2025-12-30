@@ -1,6 +1,7 @@
 import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import admin from 'firebase-admin'
 
 export const login = async (req, res) => {
   try {
@@ -72,4 +73,39 @@ export const register = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    // console.log(idToken);
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    if (!user) {
+      const newUser = new User({
+        name: decodedToken.name,
+        email: decodedToken.email,
+        password: "google-auth",
+      });
+      await newUser.save();
+    }
+
+    const user = await User.findOne({ email: decodedToken.email });
+
+    const token = jwt.sign(
+      { id: user._id, name: user.name, user: user.email },
+      "hello-this-is",
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 15 * 24 * 60,
+    });
+    res.status(200).json({
+      preferences: user.preferences,
+      message: "login successfull",
+    });
+  } catch (error) {}
 };

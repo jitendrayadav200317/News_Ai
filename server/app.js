@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import axios from "axios";
 import cron from 'node-cron';
-
+import admin from 'firebase-admin'
 
 import dbConnect from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -13,6 +13,7 @@ import bookmarksRoutes from "./routes/bookmarksRoutes.js";
 import readingHistoryRoutes from "./routes/readingHistoryRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import News from "./model/News.js";
+import serviceAccount  from './key/key.json' with{type:"json"};
 
 dotenv.config(); //load env file
 const app = express(); // create app fist
@@ -25,6 +26,12 @@ app.use(
     credentials: true,
   })
 );
+// google auth
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+// auto newa fatch and save the data base 
 const countries = ["us", "uk", "fr", "in", "it"];
 const categories = [
   "health",
@@ -34,13 +41,15 @@ const categories = [
   "politics",
   "business",
 ];
+
+// news fetch api 
 const fetchNewsAndStore = async () => {
   for (let country of countries) {
     for (let category of categories) {
       const { data } = await axios.get(
         `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`
       );
-
+//  if news alrady exgist then delile the news ans save the new news 
       if (data.articles && data.articles.length > 0) {
         for (let d of data.articles) {
           const exist = await News.findOne({ title: d.title });
@@ -81,8 +90,8 @@ app.get("/", (req, res) => {
 app.use("/auth", userRoutes); //user routes
 app.use("/api", newsRouter); //newa ruters
 app.use("/api", bookmarksRoutes); //bookmarks routes
-app.use("/api", readingHistoryRoutes);
-app.use("/api", aiRoutes);
+app.use("/api", readingHistoryRoutes); // reding history routes
+app.use("/api", aiRoutes); // ai summary routes
 
 //create server
 app.listen(process.env.PORT, () => {

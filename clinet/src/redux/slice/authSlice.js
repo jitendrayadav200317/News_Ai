@@ -3,6 +3,9 @@ import axios from "axios";
 import { toast } from "sonner";
 import { removeCookies, setCookies, getCookies } from "../../utils/util";
 
+import { auth, googleAuthProvider} from "../../config/firebase.js"
+import {signInWithPopup } from "firebase/auth";
+
 const initialState = {
   loading: false,
   authenticated: getCookies("isAuthenticated") || false,
@@ -26,13 +29,31 @@ export const loginUser = createAsyncThunk( "/auth/login", async (data, { rejectW
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,data, { withCredentials: true } );
       const verifyres = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`,{ withCredentials: true } );
-      // return res.data;
       return { ...res.data, ...verifyres.data };
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
+
+//google auth popup
+export const signInWithGoogle = createAsyncThunk("/google-login", async () => {
+  try {
+    const result = await signInWithPopup(auth, googleAuthProvider);
+    const idToken = await result.user.getIdToken();
+    console.log(idToken);
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google`,{idToken});
+      const verifyres = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`,{ withCredentials: true } );
+      return { ...res.data, ...verifyres.data };
+
+    
+  } catch (error) {
+    return rejectWithValue(
+      error.response?.data || error.message
+    );
+  }
+});
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -87,7 +108,27 @@ const authSlice = createSlice({
         state.loading = false;
         console.log(action.payload);
         toast.error(action.payload.response.data.message)
-      });
+      })
+      // login with google
+      .addCase(signInWithGoogle.pending,(action,state)=>{
+        state.loading= true
+      })
+      .addCase(signInWithGoogle.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.authenticated = action.payload.authenticated;
+        state.name = action.payload.name;
+        state.id = action.payload.id;
+        state.preferences = action.payload.preferences;
+        localStorage.setItem('preferences',JSON.stringify(action.payload.preferences))
+
+        setCookies("isAuthenticated", action.payload.authenticated);
+        setCookies("email", action.payload.email);
+        setCookies("name", action.payload.name);
+        setCookies("id", action.payload.id);
+
+        console.log(action.payload);
+        toast.success(action.payload.message);
+      })
   },
 });
 
