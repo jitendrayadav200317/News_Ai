@@ -1,3 +1,5 @@
 clinet/node_modules
 server/node_modules
 server/key/key.json
+clinet/.env
+server/.env

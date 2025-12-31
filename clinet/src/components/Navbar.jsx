@@ -20,18 +20,28 @@ function Navbar() {
         >
           NEWSAI
         </motion.h1>
-        <div className="">
+        <div className="w-1/4">
           <LiveSerch />{" "}
         </div>
         <ul className="flex gap-4">
-          {["Home", "Categories", "Channels", "About"].map((navitem) => (
+          {[
+            { name: "Home", path: "/" },
+            { name: "News", path: "/news" },
+            { name: "World", path: "/world" },
+            { name: "About", path: "/about" },
+          ].map((item) => (
             <motion.li
               whileHover={{ scale: 1.1 }}
               transition={{ type: "spring", stiffness: 100 }}
-              key={navitem}
+              key={item}
               className="hover:text-gray-700"
             >
-              <Link to={`/${navitem.toLowerCase()}`}>{navitem}</Link>
+             <Link
+                    className="text-md font-semibold tracking-wider"
+                    to={item.path}
+                  >
+                    {item.name}
+                  </Link>
             </motion.li>
           ))}
         </ul>
