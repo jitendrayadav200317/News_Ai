@@ -1,68 +1,76 @@
-import react, { useState } from "react";
-import { motion } from "motion/react";
-import { Button } from "@mantine/core";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { CircleCheckBig } from "lucide-react";
+import { Button, Loader } from "@mantine/core";
 import { Slide } from "react-awesome-reveal";
-import { setPreferences } from "../redux/slice/newsSlice.js";
+import { setPreferences } from "../redux/slice/newsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+
+// import './preference.css';
 
 function Preferences() {
-  const [selectedCatagory, setSelectedCatagory] = useState([]);
-  const { loading, error } = useSelector((state) => state.news);
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const toggleCategory = (category) => {
-    setSelectedCatagory((prev) => {
-      return prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category];
-    });
-  };
-
-  const handelSavePreferneces = () => {
-    dispatch(setPreferences({ preferences: selectedCatagory }))
-      .unwrap()
-      .then(() => navigate("/"))
-      .catch((error) => console.error("Error saving preferences:", error));
-  };
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const { loading, error } = useSelector((state) => state.news); // Redux state for loading & error
 
   const categories = [
     "Technology",
-    "sport",
+    "Sports",
     "Health",
     "Entertainment",
     "Business",
     "Politics",
   ];
+
+  const toggleCategory = (category) => {
+    setSelectedCategory((prevCategories) =>
+      prevCategories.includes(category)
+        ? prevCategories.filter((c) => c !== category)
+        : [...prevCategories, category]
+    );
+  };
+
+  const handleSavePreferences = () => {
+    dispatch(setPreferences({ preferences: selectedCategory }))
+      .unwrap()
+      .then(() => navigate("/"))
+      .catch((error) => console.error("Error saving preferences:", error));
+  };
+
   return (
     <Slide>
-      <div className="h-screen gap-6 flex flex-col justify-center items-center">
-        <div className="text-gray-800 font-semibold text-2xl ">
-          Select Interests
-        </div>
-        <div className="grid grid-cols-3 gap-10 mt-6 ">
+      <div className="h-screen bg-gray-100 flex flex-col justify-center items-center">
+        <h1 className="text-gray-800 font-bold text-4xl tracking-wide">
+          Select Your Interests
+        </h1>
+
+        <div className="card p-6 grid mt-6 grid-cols-2 sm:grid-cols-3 gap-4">
           {categories.map((category) => (
             <motion.div
+              key={category}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              key={category}
-              className={`shadow-md  rounded-xl flex justify-center items-center gap-4 px-5 py-4 ${
-                selectedCatagory.includes(category) && "bg-blue-500 text-white"
-              }`}
+              transition={{ duration: 0.5 }}
               onClick={() => toggleCategory(category)}
+              className={`shadow-md rounded-xl flex justify-center items-center gap-4 text-center px-5 py-3 cursor-pointer ${
+                selectedCategory.includes(category)
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-black"
+              }`}
             >
-              {selectedCatagory.includes(category) && <CircleCheckBig />}
+              {selectedCategory.includes(category) && <CircleCheckBig />}
               {category}
             </motion.div>
           ))}
         </div>
 
         {error && <p className="text-red-500 mt-2">{error}</p>}
+
         <Button
-          onClick={handelSavePreferneces}
+          onClick={handleSavePreferences}
           disabled={loading}
           className="mt-4"
         >
@@ -72,4 +80,5 @@ function Preferences() {
     </Slide>
   );
 }
+
 export default Preferences;

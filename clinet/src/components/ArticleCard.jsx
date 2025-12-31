@@ -59,13 +59,13 @@ const ArticleCard = ({ article, category }) => {
         publishedAt: n.publishedAt,
       },
     };
-    if (bookmarks) {
-      dispatch(addBookmarks(data));
-    } else {
-      dispatch(removeBookmarks(n.url));
-    }
+  //   if (bookmarks) {
+  //     dispatch(addBookmarks(data));
+  //   } else {
+  //     dispatch(removeBookmarks(n.url));
+  //   }
 
-    setBookmarks(!bookmarks);
+  //   setBookmarks(!bookmarks);
   };
 
   return (
@@ -80,7 +80,7 @@ const ArticleCard = ({ article, category }) => {
         <Image
           src={article.urlToImage}
           alt={article.title}
-          h={200}
+          h={350}
           w="auto"
           fit="contain"
           radius="md"

@@ -1,45 +1,111 @@
 import React from "react";
-import { Avatar, Button, Tabs } from "@mantine/core";
+import {
+  Avatar,
+  Tabs,
+  Text,
+  Button,
+  Container,
+  Card,
+  Group,
+  Badge,
+  Divider,
+  Menu,
+} from "@mantine/core";
 import { Bookmark, Heart, BotMessageSquare, Cog } from "lucide-react";
 import { getCookies } from "../utils/util";
+import { motion } from "framer-motion";
 
 function Profile() {
   return (
-    <div className="">
-      <Avatar size="xl" />
-      <text>{getCookies('name')} </text>
-      <text>{getCookies('email')} </text>
-      <Button variant="outline">Edit profile</Button>
-      <Tabs defaultValue="gallery">
-        <Tabs.List>
-          <Tabs.Tab
-            value="Bookmark"
-            leftSection={<Bookmark size={20} color="orange" />}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <Container className="max-w-2xl mx-auto p-6 bg-white rounded-lg">
+        <Card className="p-6 shadow-md">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex items-center gap-6"
           >
-            Gallery
-          </Tabs.Tab>
-          <Tabs.Tab value="Like" leftSection={<Heart size={20} color="red" />}>
-            Like News
-          </Tabs.Tab>
-          <Tabs.Tab value="Preferences" leftSection={<Cog size={20} />}>
-            Preferences
-          </Tabs.Tab>
-          <Tabs.Tab
-            value="AI-Recommandation"
-            leftSection={<BotMessageSquare size={20} color="blue" />}
+            <Avatar size={100} />
+            <div>
+              <h1 className="text-2xl font-bold">
+                {getCookies("name").toUpperCase()}
+              </h1>
+              <h2 className="text-gray-500">{getCookies("email")}</h2>
+            </div>
+          </motion.div>
+
+          <Group position="left" spacing="md" className="mt-6">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.4, ease: "easeOut" }}
+            >
+              <Badge color="blue" size="lg">
+                📌 Bookmarks
+              </Badge>
+            </motion.div>
+
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.4, ease: "easeOut" }}
+            >
+              <Badge color="green" size="lg">
+                📖 Reading History:{" "}
+              </Badge>
+            </motion.div>
+          </Group>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
           >
-            BotMessageSquare
-          </Tabs.Tab>
-        </Tabs.List>
+            <Button variant="outline" fullWidth color="blue" className="mt-4">
+              Edit Profile
+            </Button>
+          </motion.div>
+        </Card>
 
-        <Tabs.Panel value="Bookmark">Gallery tab content</Tabs.Panel>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+        >
+          <Tabs defaultValue="bookmarks" className="mt-6">
+            <Tabs.List>
+              <Tabs.Tab value="bookmarks">📌 Bookmarks</Tabs.Tab>
+              <Tabs.Tab value="liked">❤️ Liked News</Tabs.Tab>
+              <Tabs.Tab value="ai-news">🤖 AI Recommendations</Tabs.Tab>
+              <Tabs.Tab value="preferences">⚙ Preferences</Tabs.Tab>
+              <Tabs.Tab value="reading-history">⚙ Reading History</Tabs.Tab>
+            </Tabs.List>
 
-        <Tabs.Panel value="Like">Messages tab content</Tabs.Panel>
-        <Tabs.Panel value="AI-Recommandation">Messages tab content</Tabs.Panel>
+            <Tabs.Panel value="bookmarks" className="p-4"></Tabs.Panel>
 
-        <Tabs.Panel value="Preferences">Settings tab content</Tabs.Panel>
-      </Tabs>
-    </div>
+            <Tabs.Panel value="liked" className="p-4">
+              <Text className="text-gray-700">No liked news articles.</Text>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="ai-news" className="p-4">
+              <Text className="text-gray-700">
+                AI-powered news recommendations will appear here.
+              </Text>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="preferences" className="p-4">
+              <Text className="text-gray-700">No preferences set.</Text>
+            </Tabs.Panel>
+            <Tabs.Panel value="reading-history" className="p-4"></Tabs.Panel>
+          </Tabs>
+        </motion.div>
+      </Container>
+    </motion.div>
   );
 }
 export default Profile;

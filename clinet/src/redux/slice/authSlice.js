@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { removeCookies, setCookies, getCookies } from "../../utils/util";
 
+//google auth
 import { auth, googleAuthProvider} from "../../config/firebase.js"
 import {signInWithPopup } from "firebase/auth";
 
@@ -28,7 +29,9 @@ export const registerUser = createAsyncThunk("/auth/register",async (data, { rej
 export const loginUser = createAsyncThunk( "/auth/login", async (data, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,data, { withCredentials: true } );
+      // verifing user after login
       const verifyres = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`,{ withCredentials: true } );
+
       return { ...res.data, ...verifyres.data };
     } catch (error) {
       return rejectWithValue(error);
@@ -36,23 +39,29 @@ export const loginUser = createAsyncThunk( "/auth/login", async (data, { rejectW
   }
 );
 
-//google auth popup
-export const signInWithGoogle = createAsyncThunk("/google-login", async () => {
-  try {
-    const result = await signInWithPopup(auth, googleAuthProvider);
-    const idToken = await result.user.getIdToken();
-    console.log(idToken);
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google`,{idToken});
-      const verifyres = await axios.get(`${import.meta.env.VITE_API_URL}/auth/verify`,{ withCredentials: true } );
-      return { ...res.data, ...verifyres.data };
+//google auth popup and api
+export const signInWithGoogle = createAsyncThunk(
+  "/google-login",
+  async (_,{ rejectWithValue }) => {
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const idToken = await result.user.getIdToken();
 
-    
-  } catch (error) {
-    return rejectWithValue(
-      error.response?.data || error.message
-    );
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/google`,
+        { idToken }
+      );
+      // const verifyres = await axios.get(
+      //   `${import.meta.env.VITE_API_URL}/auth/verify`,
+      //   { withCredentials: true }
+      // );
+      // return { ...res.data, ...verifyres.data };
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
   }
-});
+);
 
 
 const authSlice = createSlice({
@@ -95,7 +104,7 @@ const authSlice = createSlice({
         state.id = action.payload.id;
         state.preferences = action.payload.preferences;
         localStorage.setItem('preferences',JSON.stringify(action.payload.preferences))
-
+        // set coolies local
         setCookies("isAuthenticated", action.payload.authenticated);
         setCookies("email", action.payload.email);
         setCookies("name", action.payload.name);
@@ -110,24 +119,28 @@ const authSlice = createSlice({
         toast.error(action.payload.response.data.message)
       })
       // login with google
-      .addCase(signInWithGoogle.pending,(action,state)=>{
-        state.loading= true
-      })
-      .addCase(signInWithGoogle.fulfilled,(state,action)=>{
-        state.loading = false;
+      .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.authenticated = action.payload.authenticated;
         state.name = action.payload.name;
         state.id = action.payload.id;
-        state.preferences = action.payload.preferences;
-        localStorage.setItem('preferences',JSON.stringify(action.payload.preferences))
 
+        // Set cookies and local storage
         setCookies("isAuthenticated", action.payload.authenticated);
         setCookies("email", action.payload.email);
         setCookies("name", action.payload.name);
         setCookies("id", action.payload.id);
+        state.preferences = action.payload.preferences;
+        localStorage.setItem(
+          "preferences",
+          JSON.stringify(action.payload.preferences)
+        );
 
-        console.log(action.payload);
         toast.success(action.payload.message);
+      })
+      .addCase(signInWithGoogle.rejected, (state, action) => {
+        const msg =
+          action.payload?.response?.data?.message || "Google sign-in failed";
+        toast.error(msg);
       })
   },
 });

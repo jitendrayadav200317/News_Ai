@@ -1,26 +1,33 @@
 import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import admin from 'firebase-admin'
+import admin from "firebase-admin";
 
+// Login api
 export const login = async (req, res) => {
   try {
-    const { email, password ,name} = req.body;
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
         message: "User is not register , please register and try again",
       });
     }
+    // password bcript
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
         message: "password do not match",
       });
     }
-    const token = jwt.sign({ id: user._id, name:user.name , user: user.email}, "hello-this-is", {
-      expiresIn: "1d",
-    });
+    // tolen  sprit => name id email
+    const token = jwt.sign(
+      { id: user._id, name: user.name, user: user.email },
+      "hello-this-is",
+      {
+        expiresIn: "1d",
+      }
+    );
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 15 * 24 * 60,
@@ -37,6 +44,7 @@ export const login = async (req, res) => {
   }
 };
 
+//tokem varify
 export const verify = async (req, res) => {
   console.log(req.user);
   if (!req.user) {
@@ -49,7 +57,7 @@ export const verify = async (req, res) => {
     });
   }
 };
-
+// register api
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -60,8 +68,9 @@ export const register = async (req, res) => {
         message: "user is already register plase ligin ",
       });
     }
+    // password bcript
     const hashedPasword = await bcrypt.hash(password, 12);
-
+    // user save name , email ,password => becript
     const newUser = await User.create({ name, email, password: hashedPasword });
     res.status(201).json({
       data: newUser,
@@ -74,23 +83,23 @@ export const register = async (req, res) => {
     });
   }
 };
-
+// google with goole api
 export const googleLogin = async (req, res) => {
   try {
     const { idToken } = req.body;
-    // console.log(idToken);
-
+    //  token sprit => name email password
     const decodedToken = await admin.auth().verifyIdToken(idToken);
+    console.log(decodedToken);
+    // checl user already register by email
+    const user = await User.findOne({ email: decodedToken.email });
     if (!user) {
-      const newUser = new User({
+      user = new User({
         name: decodedToken.name,
         email: decodedToken.email,
         password: "google-auth",
       });
-      await newUser.save();
+      await user.save();
     }
-
-    const user = await User.findOne({ email: decodedToken.email });
 
     const token = jwt.sign(
       { id: user._id, name: user.name, user: user.email },
@@ -104,8 +113,15 @@ export const googleLogin = async (req, res) => {
       maxAge: 15 * 24 * 60,
     });
     res.status(200).json({
-      preferences: user.preferences,
-      message: "login successfull",
+      authenticated: true,
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      preferences: user.preferences || {},
+      message: "Login successful.",
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };

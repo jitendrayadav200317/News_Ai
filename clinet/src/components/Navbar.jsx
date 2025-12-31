@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Button } from "@mantine/core";
 import { useSelector } from "react-redux";
 import ProfileDropDown from "./ProfileDropDown.jsx";
+import LiveSerch from "./LiveSerch.jsx";
 
 function Navbar() {
   const { authenticated } = useSelector((state) => state.auth);
@@ -19,7 +20,9 @@ function Navbar() {
         >
           NEWSAI
         </motion.h1>
-
+        <div className="">
+          <LiveSerch />{" "}
+        </div>
         <ul className="flex gap-4">
           {["Home", "Categories", "Channels", "About"].map((navitem) => (
             <motion.li
@@ -43,7 +46,7 @@ function Navbar() {
               </Link>
             </div>
           )}
-          {authenticated && <ProfileDropDown/>}
+          {authenticated && <ProfileDropDown />}
         </div>
       </div>
     </nav>
