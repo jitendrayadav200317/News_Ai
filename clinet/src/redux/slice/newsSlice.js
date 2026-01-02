@@ -4,14 +4,39 @@ import axios from "axios";
 
 const initialState = {
   loading: false,
+  data: null,
+  error: null,
+  news: [],
+  totalPages: 0,
+  totalCount: 0,
+  totaleItem: 0,
 };
-const id = getCookies('id');
-export const setPreferences = createAsyncThunk("/Preferences",async (data, { rejectWithValue }) => {
+
+const id = getCookies("id");
+export const setPreferences = createAsyncThunk(
+  "/Preferences",
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post( `${import.meta.env.VITE_API_URL}/api/preferences/${id}`,data );
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/preferences/${id}`,
+        data
+      );
       return res.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || "something went worng");
+    }
+  }
+);
+export const fetchAllNews = createAsyncThunk(
+  "/fetchanews",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/news`
+      );
+      return response.data; 
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "something went worng");
     }
   }
 );
@@ -22,13 +47,28 @@ const newsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(setPreferences.pending, (state) => {
-        loading: true;
+        state.loading = true;
       })
       .addCase(setPreferences.fulfilled, (state) => {
-        loading: false;
+        state.loading = false;
       })
       .addCase(setPreferences.rejected, (state) => {
-        loading: false;
+        state.loading = false;
+      })
+      .addCase(fetchAllNews.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllNews.fulfilled, (state, action) => {
+        console.log(action.payload);
+        
+        state.loading = false;
+        state.news = action.payload.data;
+        state.totalCount = action.payload.totalCount;
+        state.totalPages = action.payload.totalPages;
+        state.totaleItem = action.payload.data.length;
+      })
+      .addCase(fetchAllNews.rejected, (state) => {
+        state.loading = false;
       });
   },
 });

@@ -20,13 +20,14 @@ function Navbar() {
         >
           NEWSAI
         </motion.h1>
-        <div className="w-1/4">
+        {authenticated &&
+        <ul className="flex gap-4">
+          <div className="w-100  justify-center ">
           <LiveSerch />{" "}
         </div>
-        <ul className="flex gap-4">
           {[
             { name: "Home", path: "/" },
-            { name: "News", path: "/news" },
+            { name: "News", path: "/NewsPage" },
             { name: "World", path: "/world" },
             { name: "About", path: "/about" },
           ].map((item) => (
@@ -44,7 +45,7 @@ function Navbar() {
                   </Link>
             </motion.li>
           ))}
-        </ul>
+        </ul>}
         <div className="flex justify-center items-center">
           {!authenticated && (
             <div className="flex gap-6">
