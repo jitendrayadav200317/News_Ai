@@ -26,20 +26,20 @@ export const setPreferences = createAsyncThunk(
       return rejectWithValue(error.response?.data || "something went worng");
     }
   }
-);
-export const fetchAllNews = createAsyncThunk(
+);export const fetchAllNews = createAsyncThunk(
   "/fetchanews",
-  async (_, { rejectWithValue }) => {
+  async ({ currentPage ,search},{ rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/news`
+        `${import.meta.env.VITE_API_URL}/api/news?page=${currentPage}&keyword=${search}`
       );
-      return response.data; 
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "something went worng");
+      return rejectWithValue(error);
     }
   }
 );
+
 
 const newsSlice = createSlice({
   name: "news",
@@ -59,8 +59,6 @@ const newsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchAllNews.fulfilled, (state, action) => {
-        console.log(action.payload);
-        
         state.loading = false;
         state.news = action.payload.data;
         state.totalCount = action.payload.totalCount;

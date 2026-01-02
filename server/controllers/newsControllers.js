@@ -37,15 +37,26 @@ export const fetchNewsByCategory = async (req, res) => {
 };
 
 export const fetchAllNews = async (req, res) => {
-  const { limit = 20, page =1 } = req.query;
-  const pageNumber = Number(page);
-  const limitNumber = Number(limit);
-  const query = {};
+  const { limit = 20, page = 1, keyword } = req.query;
+  const query = keyword
+    ? {
+        $or: [
+          { title: { $regex: keyword } },
+          { content: { $regex: keyword } },
+          { description: { $regex: keyword } },
+          { author: { $regex: keyword } },
+          { url: { $regex: keyword } },
+        ],
+      }
+    : {};
+  // const pageNumber = Number(page);
+  // const limitNumber = Number(limit);
+
   try {
     const news = await News.find(query)
       .sort({ createdAt: -1 })
-      .limit(limitNumber)
-      .skip((pageNumber - 1) * limitNumber);
+      .limit(Number(limit))
+      .skip((page - 1) * limit);
 
     if (!news) {
       return res.status(400).json({
@@ -62,30 +73,7 @@ export const fetchAllNews = async (req, res) => {
   } catch (error) {}
 };
 
-// export const fetchAllNews = async (req, res) => {
-//   const { limit = 20, page = 1 } = req.query;
-
-//   const pageNumber = Number(page);
-//   const limitNumber = Number(limit);
-//   const query = {};
-
-//   try {
 //     const news = await News.find(query)
 //       .sort({ createdAt: -1 })
 //       .limit(limitNumber)
 //       .skip((pageNumber - 1) * limitNumber);
-
-//     const totalCount = await News.countDocuments(query);
-
-//     res.status(200).json({
-//       totalCount,
-//       totalPages: Math.ceil(totalCount / limitNumber),
-//       data: news,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Failed to fetch news",
-//       error: error.message,
-//     });
-//   }
-// };

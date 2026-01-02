@@ -67,7 +67,7 @@ function LiveSearch() {
             </div>
           ) : results.length > 0 ? (
             <div className="flex gap-3 flex-col">
-              {results?.map((d) => (
+              {results?.map((d , live) => (
                 <a
                   href={d.url}
                   target="_blank"

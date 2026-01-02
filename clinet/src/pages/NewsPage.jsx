@@ -11,6 +11,7 @@ function NewsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+console.log(currentPage);
 
   const categories = [
     { name: "Trending", icon: <TrendingUp size={18} /> },
