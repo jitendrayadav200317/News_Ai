@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Avatar,
   Tabs,
@@ -11,11 +11,20 @@ import {
   Divider,
   Menu,
 } from "@mantine/core";
-import { Bookmark, Heart, BotMessageSquare, Cog } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { getCookies } from "../utils/util";
 import { motion } from "framer-motion";
+import { getReadingHistory } from "../redux/slice/newsSlice";
+
 
 function Profile() {
+  // const [readingHistoryCount, setReadingHistoryCount] = useState(12);
+  const { history }= useSelector((state)=>state.news)
+const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getReadingHistory);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -83,7 +92,7 @@ function Profile() {
               <Tabs.Tab value="liked">❤️ Liked News</Tabs.Tab>
               <Tabs.Tab value="ai-news">🤖 AI Recommendations</Tabs.Tab>
               <Tabs.Tab value="preferences">⚙ Preferences</Tabs.Tab>
-              <Tabs.Tab value="reading-history">⚙ Reading History</Tabs.Tab>
+              <Tabs.Tab value="reading-history">📖 Reading History</Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="bookmarks" className="p-4"></Tabs.Panel>
@@ -101,7 +110,11 @@ function Profile() {
             <Tabs.Panel value="preferences" className="p-4">
               <Text className="text-gray-700">No preferences set.</Text>
             </Tabs.Panel>
-            <Tabs.Panel value="reading-history" className="p-4"></Tabs.Panel>
+            <Tabs.Panel value="reading-history" className="p-4">
+              {/* {history.length > 0 ? history.map((rh)=>(
+                <p>{rh.rul} </p>
+              )): null} */}
+            </Tabs.Panel>
           </Tabs>
         </motion.div>
       </Container>

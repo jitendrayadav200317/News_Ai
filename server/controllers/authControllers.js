@@ -2,7 +2,8 @@ import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import admin from "firebase-admin";
-
+import dotenv from "dotenv";
+dotenv.config();
 // Login api
 export const login = async (req, res) => {
   try {
@@ -15,6 +16,7 @@ export const login = async (req, res) => {
     }
     // password bcript
     const isMatch = await bcrypt.compare(password, user.password);
+    //  password chack
     if (!isMatch) {
       return res.status(401).json({
         message: "password do not match",
@@ -23,14 +25,16 @@ export const login = async (req, res) => {
     // tolen  sprit => name id email
     const token = jwt.sign(
       { id: user._id, name: user.name, user: user.email },
-      "hello-this-is",
+      process.env.JWT_SECRET,
       {
         expiresIn: "1d",
       }
     );
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 15 * 24 * 60,
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+      sameSite: "none",
+      secure: true,
     });
     res.status(200).json({
       preferences: user.preferences,
@@ -46,14 +50,23 @@ export const login = async (req, res) => {
 
 //tokem varify
 export const verify = async (req, res) => {
-  console.log(req.user);
-  if (!req.user) {
-  } else {
+  try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ authenticated: false, message: "unauthorize" });
+    }
     return res.status(200).json({
       authenticated: true,
       id: req.user.id,
       name: req.user.name,
       email: req.user.email,
+    });
+  } catch (error) {
+    console.error("Verification Error:", error);
+    res.status(500).json({
+      message: "Internal Server Error.",
+      error: error.message,
     });
   }
 };
@@ -83,45 +96,58 @@ export const register = async (req, res) => {
     });
   }
 };
-// google with goole api
+
 export const googleLogin = async (req, res) => {
   try {
     const { idToken } = req.body;
-    //  token sprit => name email password
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    console.log(decodedToken);
-    // checl user already register by email
-    const user = await User.findOne({ email: decodedToken.email });
-    if (!user) {
-      user = new User({
-        name: decodedToken.name,
-        email: decodedToken.email,
-        password: "google-auth",
-      });
-      await user.save();
+
+    if (!idToken) {
+      return res.status(400).json({ message: "ID token is required" });
     }
 
+    // Verify Google token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+    let user = await User.findOne({ email: decodedToken.email });
+
+    if (!user) {
+      user = await User.create({
+        name: decodedToken.name,
+        email: decodedToken.email,
+        password: crypto.randomUUID(), // placeholder (won’t be used)
+        preferences: [],
+      });
+    }
+
+    // Create JWT
     const token = jwt.sign(
-      { id: user._id, name: user.name, user: user.email },
-      "hello-this-is",
       {
-        expiresIn: "1d",
-      }
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
+
+    // Set cookie (15 days)
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 15 * 24 * 60,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({
+
+    return res.status(200).json({
       authenticated: true,
       id: user._id,
       email: user.email,
       name: user.name,
-      preferences: user.preferences || {},
-      message: "Login successful.",
+      preferences: user.preferences || [],
+      message: "Login successful",
     });
   } catch (error) {
     console.error("Google Login Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(401).json({ message: "Google authentication failed" });
   }
 };

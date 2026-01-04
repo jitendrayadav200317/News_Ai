@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
   console.log(token);
@@ -8,9 +11,15 @@ const verifyToken = (req, res, next) => {
       message: "no token found",
     });
   }
-  const decoded = jwt.verify(token,'hello-this-is')
-  req.user = decoded
-  next()
-  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(403).json({
+      authenticated: false,
+      message: "Invalid token",
+    });
+  }
 };
 export default verifyToken;

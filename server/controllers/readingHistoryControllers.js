@@ -17,9 +17,9 @@ export const clearReadingHistory = async (req, res) => {
     const user = await User.findById(id);
     if (!user) res.status(404).json({ message: "user not found" });
     user.readingHistory = [];
-    await user.save()
+    await user.save();
     res.status(200).json({
-      message:"history clear"
+      message: "history clear",
     });
   } catch (error) {}
 };

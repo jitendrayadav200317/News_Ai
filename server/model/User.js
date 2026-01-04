@@ -1,12 +1,39 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, requiresd: true },
-  preferences: [String],
-  bookmarks: [{ Object }],
-  readingHistory: [{ Object }],
+const BookmarkSchema = new mongoose.Schema({
+  articleId: String,
+  title: String,
+  source: String,
+  url: String,
+  imageUrl: String,
+  publishedAt: Date,
+  addedAt: { type: Date, default: Date.now },
 });
-const User = mongoose.model("User ", UserSchema);
+
+const ReadingHistorySchema = new mongoose.Schema({
+  articleId: String,
+  title: String,
+  source: String,
+  url: String,
+  imageUrl: String,
+  publishedAt: Date,
+  readAt: { type: Date, default: Date.now },
+});
+
+const UserSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+
+    preferences: [{ type: String }],
+
+    bookmarks: [BookmarkSchema],
+    readingHistory: [ReadingHistorySchema],
+  },
+  { timestamps: true }
+);
+
+const User = mongoose.model("User", UserSchema);
+
 export default User;

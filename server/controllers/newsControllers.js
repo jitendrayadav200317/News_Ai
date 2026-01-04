@@ -72,8 +72,3 @@ export const fetchAllNews = async (req, res) => {
     });
   } catch (error) {}
 };
-
-//     const news = await News.find(query)
-//       .sort({ createdAt: -1 })
-//       .limit(limitNumber)
-//       .skip((pageNumber - 1) * limitNumber);

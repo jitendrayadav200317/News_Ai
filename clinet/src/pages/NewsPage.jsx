@@ -3,6 +3,7 @@ import { Pagination, Skeleton, Badge } from "@mantine/core";
 import { TrendingUp, Briefcase, Cpu, Volleyball, Landmark } from "lucide-react";
 import { fetchAllNews } from "../redux/slice/newsSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { addReadingHistory } from "../redux/slice/newsSlice.js";
 
 function NewsPage() {
   const { totalPages, totalCount, news, loading } = useSelector(
@@ -11,7 +12,7 @@ function NewsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
-console.log(currentPage);
+  console.log(currentPage);
 
   const categories = [
     { name: "Trending", icon: <TrendingUp size={18} /> },
@@ -29,25 +30,19 @@ console.log(currentPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  //   const handleAddHistory = (n) => {
-  //    articleId: String,
-  // title: String,
-  // source: String,
-  // url: String,
-  // imageUrl: String,
-  // publishedAt: Date,
-  //     const data = {
-  //       article: {
-  //         articleId: n._id,
-  //         title: n.title,
-  //         source: n.source.name,
-  //         url: n.url,
-  //         imageUrl: n.urlToImage,
-  //         publishedAt: n.publishedAt,
-  //       },
-  //     };
-  //     dispatch(addReadingHistory(data));
-  //   };
+  const handleAddHistory = (n) => {
+    const data = {
+      article: {
+        articleId: n._id,
+        title: n.title,
+        source: n.source.name,
+        url: n.url,
+        imageUrl: n.urlToImage,
+        publishedAt: n.publishedAt,
+      },
+    };
+    dispatch(addReadingHistory(data));
+  };
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 p-6 sticky top-0 h-screen border-l border-gray-100 bg-white">
