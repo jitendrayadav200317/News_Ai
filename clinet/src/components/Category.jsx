@@ -1,6 +1,6 @@
 import { Tabs } from "@mantine/core";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ArticleCard from "./ArticleCard";
@@ -8,15 +8,17 @@ import { Skeleton } from "@mantine/core";
 
 function Category() {
   const [category, setCategory] = useState("General");
-
   const categories = [
-    "General",
-    "Sports",
     "Business",
-    "Entertainment",
-    "Science",
     "Technology",
+    "Science",
     "Health",
+    "Sports",
+    "Entertainment",
+    "Weather",
+    "Gadgets",
+    "Social Media",
+    "Gaming",
   ];
 
   const fetchNewsByCategory = async ({ pageParam = 1 }) => {
@@ -35,7 +37,9 @@ function Category() {
         return lastPage.nextPage;
       },
     });
-  console.log(data);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [category]);
   return (
     <div className="py-12 px-10 max-w-5xl mx-auto">
       <h1 className="text-center space-y-10 my-6 font-bold text-3xl">

@@ -10,6 +10,7 @@ const initialState = {
   totalPages: 0,
   totalCount: 0,
   totaleItem: 0,
+  readingHistory : []
 };
 
 export const setPreferences = createAsyncThunk(
@@ -45,7 +46,7 @@ export const fetchAllNews = createAsyncThunk(
 );
 
 export const addReadingHistory = createAsyncThunk(
-  "/reading-history/add",
+  "readingHistory/add",
   async (data, { rejectWithValue }) => {
     const id = getCookies("id");
     try {
@@ -65,7 +66,7 @@ export const addReadingHistory = createAsyncThunk(
 );
 
 export const getReadingHistory = createAsyncThunk(
-  "/reading-history/get",
+  "/readingHistory/get",
   async (_, { rejectWithValue }) => {
     const id = getCookies("id");
     try {
@@ -108,6 +109,25 @@ const newsSlice = createSlice({
       })
       .addCase(fetchAllNews.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(addReadingHistory.pending, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(addReadingHistory.fulfilled, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(addReadingHistory.rejected, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(getReadingHistory.pending, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(getReadingHistory.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.readingHistory = action.payload.data;
+      })
+      .addCase(getReadingHistory.rejected, (state, action) => {
+        console.log(action.payload);
       });
   },
 });

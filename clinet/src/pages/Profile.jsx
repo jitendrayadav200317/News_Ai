@@ -12,17 +12,17 @@ import {
   Menu,
 } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
-import { getCookies } from "../utils/util";
+import { getCookies } from "../utils/util.js";
 import { motion } from "framer-motion";
-import { getReadingHistory } from "../redux/slice/newsSlice";
-
+import { getReadingHistory } from "../redux/slice/newsSlice.js";
 
 function Profile() {
   // const [readingHistoryCount, setReadingHistoryCount] = useState(12);
-  const { history }= useSelector((state)=>state.news)
-const dispatch = useDispatch()
+  // const { history }= useSelector((state)=>state.news)
+  const { readingHistory } = useSelector((state) => state.news);
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getReadingHistory);
+    dispatch(getReadingHistory());
   }, []);
 
   return (
@@ -65,7 +65,7 @@ const dispatch = useDispatch()
               transition={{ delay: 0.5, duration: 0.4, ease: "easeOut" }}
             >
               <Badge color="green" size="lg">
-                📖 Reading History:{" "}
+                📖 Reading History: {readingHistory.length > 0 ? readingHistory.length : 0}
               </Badge>
             </motion.div>
           </Group>
@@ -111,9 +111,16 @@ const dispatch = useDispatch()
               <Text className="text-gray-700">No preferences set.</Text>
             </Tabs.Panel>
             <Tabs.Panel value="reading-history" className="p-4">
-              {/* {history.length > 0 ? history.map((rh)=>(
-                <p>{rh.rul} </p>
-              )): null} */}
+              {readingHistory.length > 0
+                ? readingHistory.map((rh) => (
+                    <>
+                      <a href={rh.url} target="_blank" className="black p-2 hover:underline ">
+                        {" "}
+                        {rh.title}{" "}
+                      </a>
+                    </>
+                  ))
+                : null}
             </Tabs.Panel>
           </Tabs>
         </motion.div>
