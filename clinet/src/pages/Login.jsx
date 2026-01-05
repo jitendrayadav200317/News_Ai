@@ -9,8 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
-import GoogleIcon from "../components/GoogleIcon";
-import { loginUser,signInWithGoogle } from "../redux/slice/authSlice";
+import GoogleIcon from "../components/GoogleIcon.jsx";
+import { loginUser,signInWithGoogle } from "../redux/slice/authSlice.js";
 
 
 const loginSchema = z.object({

@@ -8,8 +8,6 @@ import {
   Card,
   Group,
   Badge,
-  Divider,
-  Menu,
 } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { getCookies } from "../utils/util.js";

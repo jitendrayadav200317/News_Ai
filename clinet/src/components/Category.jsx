@@ -3,12 +3,13 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ArticleCard from "./ArticleCard";
+import ArticleCard from "./ArticleCard.jsx";
 import { Skeleton } from "@mantine/core";
 
 function Category() {
   const [category, setCategory] = useState("General");
   const categories = [
+    "General",
     "Business",
     "Technology",
     "Science",

@@ -1,11 +1,11 @@
 import React from "react";
 import { Avatar, Flex, Menu } from "@mantine/core";
 import { useDispatch } from "react-redux";
-import { singOut } from "../redux/slice/authSlice";
+import { singOut } from "../redux/slice/authSlice.js";
 import { useNavigate } from "react-router-dom";
 import { LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getCookies } from "../utils/util";
+import { getCookies } from "../utils/util.js";
 
 function ProfileDropDown() {
   const navigate = useNavigate();
