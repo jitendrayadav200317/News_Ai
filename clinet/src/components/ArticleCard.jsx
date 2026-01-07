@@ -13,8 +13,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Eye, Bookmark, Sparkles, Copy, Share2 } from "lucide-react";
-// import { addBookmarks } from "../redux/slice/newsSlice";
-import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice";
+import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice.js";
 import { useDispatch } from "react-redux";
 const ArticleCard = ({ article, category }) => {
   const [opened, setOpened] = useState(false);
@@ -121,7 +120,7 @@ const ArticleCard = ({ article, category }) => {
               size="sm"
               color={bookmarks ? "blue" : "red"}
             >
-              <Bookmark size={18} fill={bookmarks ? null : "currentColor"} />
+              <Bookmark size={18} fill={bookmarks ? "currentColor" : "currentColor"} />
             </ActionIcon>
           </Tooltip>
 

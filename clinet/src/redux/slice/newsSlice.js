@@ -103,8 +103,8 @@ export const getBookmarks = createAsyncThunk(
   }
 );
 
-export const addBookmarks = createAsyncThunk( 
-  "/addBookmarks",
+export const addBookmarks = createAsyncThunk(
+  "/addBookmarks", //bookmarks
   async (data, { rejectWithValue }) => {
     const id = getCookies("id");
     try {
@@ -119,7 +119,6 @@ export const addBookmarks = createAsyncThunk(
   }
 );
 
-
 export const removeBookmarks = createAsyncThunk(
   "/removeBookmarks",
   async (articleUrl, { rejectWithValue }) => {
@@ -127,7 +126,7 @@ export const removeBookmarks = createAsyncThunk(
     try {
       const res = await axios.delete(
         `${import.meta.env.VITE_API_URL}/api/${id}/bookmarks`,
-        { articleUrl }
+        { data: { articleUrl } }
       );
       return res.data;
     } catch (error) {
@@ -182,7 +181,7 @@ const newsSlice = createSlice({
       .addCase(getReadingHistory.rejected, (state, action) => {
         console.log(action.payload);
       })
-      .addCase(addBookmarks.pending, (action) => {
+      .addCase(addBookmarks.pending, (action, state) => {
         state.loading = true;
         console.log(action.payload);
       })
@@ -190,11 +189,11 @@ const newsSlice = createSlice({
         state.loading = false;
         console.log(action.payload);
       })
-      .addCase(addBookmarks.rejected, (state) => {
+      .addCase(addBookmarks.rejected, (state, action) => {
         state.loading = true;
         console.log(action.payload);
       })
-      .addCase(removeBookmarks.pending, (action) => {
+      .addCase(removeBookmarks.pending, (action, state) => {
         state.loading = true;
         console.log(action.payload);
       })
@@ -202,11 +201,11 @@ const newsSlice = createSlice({
         state.loading = false;
         console.log(action.payload);
       })
-      .addCase(removeBookmarks.rejected, (state) => {
+      .addCase(removeBookmarks.rejected, (state, action) => {
         state.loading = true;
         console.log(action.payload);
       })
-      .addCase(getBookmarks.pending, (action) => {
+      .addCase(getBookmarks.pending, (state, action) => {
         state.loading = true;
         console.log(action.payload);
       })
@@ -215,7 +214,7 @@ const newsSlice = createSlice({
         console.log(action.payload);
         state.bookmarks = action.payload.data;
       })
-      .addCase(getBookmarks.rejected, (state) => {
+      .addCase(getBookmarks.rejected, (state, action) => {
         state.loading = true;
         console.log(action.payload);
       });
@@ -223,3 +222,24 @@ const newsSlice = createSlice({
 });
 
 export default newsSlice.reducer;
+
+
+// export const removeBookmarks = createAsyncThunk(
+//   "bookmarks/removeBookmarks",
+//   async (articleUrl, { rejectWithValue }) => {
+//     const id = getCookies("id");
+//     try {
+//       const res = await axios.delete(
+//         `${import.meta.env.VITE_API_URL}/api/${id}/bookmarks`,
+//         {
+//           data: { articleUrl }
+//         }
+//       );
+//       return res.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response?.data || error.message
+//       );
+//     }
+//   }
+// );

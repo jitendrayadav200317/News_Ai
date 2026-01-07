@@ -82,7 +82,7 @@ const fetchNewsAndStore = async () => {
   }
 };
 
-cron.schedule('*/20 * * * *',fetchNewsAndStore);
+//cron.schedule('*/20 * * * *',fetchNewsAndStore);
 
 app.get("/", (req, res) => {
   res.send("HomePage");
