@@ -10,7 +10,8 @@ const initialState = {
   totalPages: 0,
   totalCount: 0,
   totaleItem: 0,
-  readingHistory : []
+  readingHistory: [],
+  bookmarks: [],
 };
 
 export const setPreferences = createAsyncThunk(
@@ -83,6 +84,58 @@ export const getReadingHistory = createAsyncThunk(
     }
   }
 );
+export const getBookmarks = createAsyncThunk(
+  "/getBookmarks",
+  async (_, { rejectWithValue }) => {
+    const id = getCookies("id");
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/${id}/bookmarks`,
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue({
+        message:
+          error.response?.data?.message || "Failed to fetch reading history",
+      });
+    }
+  }
+);
+
+export const addBookmarks = createAsyncThunk( 
+  "/addBookmarks",
+  async (data, { rejectWithValue }) => {
+    const id = getCookies("id");
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/${id}/bookmarks`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const removeBookmarks = createAsyncThunk(
+  "/removeBookmarks",
+  async (articleUrl, { rejectWithValue }) => {
+    const id = getCookies("id");
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/${id}/bookmarks`,
+        { articleUrl }
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const newsSlice = createSlice({
   name: "news",
   initialState,
@@ -127,6 +180,43 @@ const newsSlice = createSlice({
         state.readingHistory = action.payload.data;
       })
       .addCase(getReadingHistory.rejected, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(addBookmarks.pending, (action) => {
+        state.loading = true;
+        console.log(action.payload);
+      })
+      .addCase(addBookmarks.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+      })
+      .addCase(addBookmarks.rejected, (state) => {
+        state.loading = true;
+        console.log(action.payload);
+      })
+      .addCase(removeBookmarks.pending, (action) => {
+        state.loading = true;
+        console.log(action.payload);
+      })
+      .addCase(removeBookmarks.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+      })
+      .addCase(removeBookmarks.rejected, (state) => {
+        state.loading = true;
+        console.log(action.payload);
+      })
+      .addCase(getBookmarks.pending, (action) => {
+        state.loading = true;
+        console.log(action.payload);
+      })
+      .addCase(getBookmarks.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+        state.bookmarks = action.payload.data;
+      })
+      .addCase(getBookmarks.rejected, (state) => {
+        state.loading = true;
         console.log(action.payload);
       });
   },

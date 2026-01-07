@@ -33,24 +33,24 @@ export const getBookmarks = async (req, res) => {
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ message: "user not found" });
-    }res.status(200).json({
-        data:user.bookmarks
-    })
+    }
+    res.status(200).json({
+      data: user.bookmarks,
+    });
   } catch (error) {}
 };
 
-export const revoveBookmarks = async(req,res) => {
-    try {
-        const {id , articleId}= req.params;
-        const user = await User.findById(id);
-        if(!user){
-            return res.status(404).json({
-                message:"user not found"
-            })
-        }user.bookmarks = user.bookmarks.filter(b=> b._id !== articleId);
-        res.status(200).jsonz({message:"bookmark removed"})
-
-    } catch (error) {
-        
+export const revoveBookmarks = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { articleUrl } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found",
+      });
     }
+    user.bookmarks = user.bookmarks.filter((b) => b.url !== articleUrl);
+    res.status(200).jsonz({ message: "bookmark removed" });
+  } catch (error) {}
 };

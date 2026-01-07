@@ -13,7 +13,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Eye, Bookmark, Sparkles, Copy, Share2 } from "lucide-react";
-// import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice.js";
+// import { addBookmarks } from "../redux/slice/newsSlice";
+import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice";
 import { useDispatch } from "react-redux";
 const ArticleCard = ({ article, category }) => {
   const [opened, setOpened] = useState(false);
@@ -59,13 +60,13 @@ const ArticleCard = ({ article, category }) => {
         publishedAt: n.publishedAt,
       },
     };
-  //   if (bookmarks) {
-  //     dispatch(addBookmarks(data));
-  //   } else {
-  //     dispatch(removeBookmarks(n.url));
-  //   }
+    if (bookmarks) {
+      dispatch(addBookmarks(data));
+    } else {
+      dispatch(removeBookmarks(n.url));
+    }
 
-  //   setBookmarks(!bookmarks);
+    setBookmarks(!bookmarks);
   };
 
   return (
@@ -80,7 +81,7 @@ const ArticleCard = ({ article, category }) => {
         <Image
           src={article.urlToImage}
           alt={article.title}
-          h={350}
+          h={200}
           w="auto"
           fit="contain"
           radius="md"

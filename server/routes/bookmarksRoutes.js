@@ -5,6 +5,6 @@ const bookmarksRoutes = express.Router();
 
 bookmarksRoutes.get('/:id/bookmarks',getBookmarks);
 bookmarksRoutes.post('/:id/bookmarks',addBookmark);
-bookmarksRoutes.delete('/:id/bookmarks/:articleId',revoveBookmarks)
+bookmarksRoutes.delete('/:id/bookmarks',revoveBookmarks)
 
 export default bookmarksRoutes;

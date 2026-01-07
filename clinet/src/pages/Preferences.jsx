@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { CircleCheckBig } from "lucide-react";
 import { Button, Loader } from "@mantine/core";
 import { Slide } from "react-awesome-reveal";
-import { setPreferences } from "../redux/slice/newsSlice";
+import { setPreferences } from "../redux/slice/newsSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Button, Loader } from "@mantine/core";
 import { Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { registerUser } from "../redux/slice/authSlice";
+import { registerUser } from "../redux/slice/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {  z } from "zod";

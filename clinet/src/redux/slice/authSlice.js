@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
-import { removeCookies, setCookies, getCookies } from "../../utils/util";
+import { removeCookies, setCookies, getCookies } from "../../utils/util.js";
 
 //google auth
 import { auth, googleAuthProvider } from "../../config/firebase.js";
