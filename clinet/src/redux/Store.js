@@ -4,6 +4,7 @@ import newsReducer from "./slice/newsSlice.js";
 import countReducer from "./slice/newsSlice.js";
 import laodingReducer from "./slice/newsSlice.js";
 import productReducer from "./slice/newsSlice.js"
+import summaryReducer from "./slice/summarySlice.js";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     count: countReducer,
     laoding: laodingReducer,
     product: productReducer,
+    summaries : summaryReducer,
   },
 });
 

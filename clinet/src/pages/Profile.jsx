@@ -19,13 +19,12 @@ import List from "../components/List.jsx";
 function Profile() {
   // const [readingHistoryCount, setReadingHistoryCount] = useState(12);
   // const { history }= useSelector((state)=>state.news)
-  const { readingHistory , bookmarks} = useSelector((state) => state.news);
+  const { readingHistory, bookmarks } = useSelector((state) => state.news);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getReadingHistory());
-    dispatch(getBookmarks())
+    dispatch(getBookmarks());
     console.log(getBookmarks);
-    
   }, []);
 
   return (
@@ -58,7 +57,8 @@ function Profile() {
               transition={{ delay: 0.4, duration: 0.4, ease: "easeOut" }}
             >
               <Badge color="blue" size="lg">
-                📌 Bookmarks
+                📌 Bookmarks : {""}
+                {bookmarks.length > 0 ? bookmarks.length : 0}
               </Badge>
             </motion.div>
 

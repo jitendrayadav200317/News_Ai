@@ -1,25 +1,22 @@
+import React from "react";
 import { Tabs } from "@mantine/core";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ArticleCard from "./ArticleCard.jsx";
+import ArticleCard from "./ArticleCard";
 import { Skeleton } from "@mantine/core";
-
 function Category() {
-  const [category, setCategory] = useState("General");
+  const [category, setCategory] = useState("general");
+  console.log(category);
   const categories = [
     "General",
-    "Business",
-    "Technology",
-    "Science",
-    "Health",
     "Sports",
+    "Politics",
+    "Business",
     "Entertainment",
-    "Weather",
-    "Gadgets",
-    "Social Media",
-    "Gaming",
+    "Health",
+    "Science",
   ];
 
   const fetchNewsByCategory = async ({ pageParam = 1 }) => {
@@ -30,33 +27,41 @@ function Category() {
     );
     return response.data;
   };
+
   const { data, hasNextPage, fetchNextPage, status, isLoading } =
     useInfiniteQuery({
       queryKey: ["category", category],
       queryFn: fetchNewsByCategory,
       getNextPageParam: (lastPage) => {
+        // console.log('lastPage: ', lastPage);
+
         return lastPage.nextPage;
       },
     });
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [category]);
+  console.log(data);
   return (
     <div className="py-12 px-10 max-w-5xl mx-auto">
       <h1 className="text-center space-y-10 my-6 font-bold text-3xl">
         Categories
       </h1>
 
-      <Tabs value={category} onChange={setCategory}>
-        <Tabs.List>
+      <Tabs
+        defaultValue="General"
+        variant="outline"
+        onChange={(value) => setCategory(value.toLowerCase())}
+      >
+        <Tabs.List size={20}>
+          {/* {categories.map((cat) => (
+            <Tabs.Tab value={cat}>{cat}</Tabs.Tab>
+          ))} */}
           {categories.map((cat) => (
-            <Tabs.Tab value={cat} key={cat}>
+            <Tabs.Tab key={cat} value={cat}>
               {cat}
             </Tabs.Tab>
           ))}
         </Tabs.List>
       </Tabs>
-      <div className="mt-14">
+      <div className=" mt-14">
         <InfiniteScroll
           dataLength={
             data?.pages.length >= 0 &&
@@ -68,13 +73,13 @@ function Category() {
           next={fetchNextPage}
           hasMore={hasNextPage}
           loader={
-            <p style={{ textAlign: "center", marginTop: "20px" }}>
-              <b>Loading...</b>
+            <p style={{ textAlign: "center", margin: "20px 20px" }}>
+              Loading ...
             </p>
           }
           endMessage={
             <p style={{ textAlign: "center", marginTop: "20px" }}>
-              <b>NO More News</b>
+              No more news
             </p>
           }
         >
