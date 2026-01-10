@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { data } from "react-router";
+import axios from "axios";
 
 const initialState = {
   opened: false,
   loading: false,
   summary: "",
-  error : null,
+  error: null,
 };
 
 export const generateSummary = createAsyncThunk(
@@ -28,19 +28,29 @@ export const generateSummary = createAsyncThunk(
 const summarySlice = createSlice({
   name: "summary",
   initialState,
+  reducers: {
+    setOpened: function (state, action) {
+      state.opened = !state.opened;
+    },
+    open: function (state) {
+      state.opened = true;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(generateSummary.pending, (state) => {
         (state.opened = true), (state.loading = true);
       })
       .addCase(generateSummary.fulfilled, (state, action) => {
-        state.summary.action.payload.summary;
+        state.summary = action.payload.summary;
+        state.loading = false;
       })
       .addCase(generateSummary.rejected, (state, action) => {
         console.log(action.payload);
-        
+        state.loading = false;
       });
   },
 });
 
 export default summarySlice.reducer;
+export const { setOpened, open } = summarySlice.actions;

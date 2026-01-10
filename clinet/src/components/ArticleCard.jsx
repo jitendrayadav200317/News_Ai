@@ -14,37 +14,32 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Eye, Bookmark, Sparkles, Copy, Share2 } from "lucide-react";
 import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice.js";
-import { useDispatch, useSelector } from "react-redux";
-import { generateSummary } from "../redux/slice/summarySlice.js";
+import { useDispatch } from "react-redux";
 const ArticleCard = ({ article, category }) => {
-  // const [opened, setOpened] = useState(false);
-  // const [error, setError] = useState(null);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [summary, setSummary] = useState("");
+  const [opened, setOpened] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [summary, setSummary] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   const [bookmarks, setBookmarks] = useState(true);
-  const {opened,loading,summary,error}= useSelector((state)=>state.summarize)
 
   const dispatch = useDispatch();
-  const handleSummarize = ()=>{
-    dispatch(generateSummary(article))
-  }
-  // const handleSummarize = async () => {
-  //   setOpened(true);
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await axios.post(
-  //       `${import.meta.env.VITE_API_URL}/api/summarize`,
-  //       {
-  //         url: article.url,
-  //       }
-  //     );
-  //     setSummary(res.data.summary);
-  //   } catch (error) {
-  //     setError(error.message);
-  //   }
-  //   setIsLoading(false);
-  // };
+  const handleSummarize = async () => {
+    setOpened(true);
+    setIsLoading(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/summarize`,
+        {
+          url: article.url,
+        }
+      );
+      setSummary(res.data.summary);
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(summary);
@@ -125,14 +120,14 @@ const ArticleCard = ({ article, category }) => {
               size="sm"
               color={bookmarks ? "blue" : "red"}
             >
-              <Bookmark size={18} fill={bookmarks ? "currentColor" : "currentColor"} />
+              <Bookmark size={18} fill={bookmarks ? null : "currentColor"} />
             </ActionIcon>
           </Tooltip>
 
           <Popover
             opened={opened}
-            // onChange={setOpened}
-            width={loading ? 350 : 500}
+            onChange={setOpened}
+            width={isLoading ? 350 : 500}
             position="bottom"
             withArrow
             shadow="md"
@@ -150,8 +145,8 @@ const ArticleCard = ({ article, category }) => {
                 </ActionIcon>
               </Tooltip>
             </Popover.Target>
-            <Popover.Dropdown style={{ minHeight: loading ? 150 : "auto" }}>
-              {loading ? (
+            <Popover.Dropdown style={{ minHeight: isLoading ? 150 : "auto" }}>
+              {isLoading ? (
                 <Flex align="center" justify="center" gap="sm">
                   <motion.span
                     initial={{ opacity: 0 }}
