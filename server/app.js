@@ -36,7 +36,9 @@ dbConnect(); //connect to db
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://news-ai-omega.vercel.app/",
+    // origin: "https://news-ai-omega.vercel.app/",
+    origin: "https://news-ai-brown.vercel.app/login",
+
     credentials: true,
   })
 );
