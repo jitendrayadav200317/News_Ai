@@ -56,6 +56,7 @@ export const verify = async (req, res) => {
         .status(401)
         .json({ authenticated: false, message: "unauthorize" });
     }
+    Henv;
     return res.status(200).json({
       authenticated: true,
       id: req.user.id,
@@ -135,6 +136,7 @@ export const googleLogin = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      secure: true,
       maxAge: 15 * 24 * 60 * 60 * 1000,
     });
 

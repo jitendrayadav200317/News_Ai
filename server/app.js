@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import axios from "axios";
-import cron from 'node-cron';
-import admin from 'firebase-admin'
+import cron from "node-cron";
+import admin from "firebase-admin";
 
 import dbConnect from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -13,7 +13,20 @@ import bookmarksRoutes from "./routes/bookmarksRoutes.js";
 import readingHistoryRoutes from "./routes/readingHistoryRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import News from "./model/News.js";
-import serviceAccount  from './key/key.json' with{type:"json"};
+// import serviceAccount  from './key/key.json' with{type:"json"};
+
+const serviceAccount = {
+  type: process.env.FIREBASE_TYPE,
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_CLIENT_ID,
+  auth_uri: process.env.FIREBASE_AUTH_URI,
+  token_uri: process.env.FIREBASE_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+};
 
 dotenv.config(); //load env file
 const app = express(); // create app fist
@@ -22,16 +35,17 @@ app.use(cookieParser());
 dbConnect(); //connect to db
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://news-ai-omega.vercel.app/",
     credentials: true,
   })
 );
 // google auth
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
 });
 
-// auto newa fatch and save the data base 
+// auto newa fatch and save the data base
 const countries = ["us", "uk", "fr", "in", "it"];
 const categories = [
   "health",
@@ -42,14 +56,14 @@ const categories = [
   "business",
 ];
 
-// news fetch api 
+// news fetch api
 const fetchNewsAndStore = async () => {
   for (let country of countries) {
     for (let category of categories) {
       const { data } = await axios.get(
         `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`
       );
-//  if news alrady exgist then delile the news ans save the new news 
+      //  if news alrady exgist then delile the news ans save the new news
       if (data.articles && data.articles.length > 0) {
         for (let d of data.articles) {
           const exist = await News.findOne({ title: d.title });

@@ -80,7 +80,7 @@ const ArticleCard = ({ article, category }) => {
         <Image
           src={article.urlToImage}
           alt={article.title}
-          h={200}
+          h={300}
           w="auto"
           fit="contain"
           radius="md"
