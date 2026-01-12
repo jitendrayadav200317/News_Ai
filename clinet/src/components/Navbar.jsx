@@ -28,7 +28,7 @@ function Navbar() {
           {[
             { name: "Home", path: "/" },
             { name: "News", path: "/NewsPage" },
-            { name: "World", path: "/world" },
+            // { name: "World", path: "/world" },
             { name: "About", path: "/about" },
           ].map((item) => (
             <motion.li

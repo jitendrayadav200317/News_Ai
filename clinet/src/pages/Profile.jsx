@@ -79,9 +79,9 @@ function Profile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
           >
-            <Button variant="outline" fullWidth color="blue" className="mt-4">
+            {/* <Button variant="outline" fullWidth color="blue" className="mt-4">
               Edit Profile
-            </Button>
+            </Button> */}
           </motion.div>
         </Card>
 
