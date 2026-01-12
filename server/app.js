@@ -35,7 +35,8 @@ app.use(cookieParser());
 dbConnect(); //connect to db
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://news-ai-beta.vercel.app/login",
+    // origin: "http://localhost:5173",
 
     credentials: true,
   })
