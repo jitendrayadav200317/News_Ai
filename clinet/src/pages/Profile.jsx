@@ -79,9 +79,9 @@ function Profile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
           >
-            {/* <Button variant="outline" fullWidth color="blue" className="mt-4">
+            <Button variant="outline" fullWidth color="blue" className="mt-4">
               Edit Profile
-            </Button> */}
+            </Button>
           </motion.div>
         </Card>
 
@@ -93,10 +93,10 @@ function Profile() {
           <Tabs defaultValue="bookmarks" className="mt-6">
             <Tabs.List>
               <Tabs.Tab value="bookmarks">📌 Bookmarks</Tabs.Tab>
+              <Tabs.Tab value="reading-history">📖 Reading History</Tabs.Tab>
               <Tabs.Tab value="liked">❤️ Liked News</Tabs.Tab>
               <Tabs.Tab value="ai-news">🤖 AI Recommendations</Tabs.Tab>
               <Tabs.Tab value="preferences">⚙ Preferences</Tabs.Tab>
-              <Tabs.Tab value="reading-history">📖 Reading History</Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="bookmarks" className="p-4">

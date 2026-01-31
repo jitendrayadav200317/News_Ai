@@ -143,11 +143,13 @@ const newsSlice = createSlice({
       .addCase(setPreferences.pending, (state) => {
         state.loading = true;
       })
-      .addCase(setPreferences.fulfilled, (state) => {
+      .addCase(setPreferences.fulfilled, (state, action) => {
         state.loading = false;
+        state.preferences = action.payload.preferences;
       })
-      .addCase(setPreferences.rejected, (state) => {
+      .addCase(setPreferences.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
       })
       .addCase(fetchAllNews.pending, (state) => {
         state.loading = true;
@@ -222,7 +224,6 @@ const newsSlice = createSlice({
 });
 
 export default newsSlice.reducer;
-
 
 // export const removeBookmarks = createAsyncThunk(
 //   "bookmarks/removeBookmarks",

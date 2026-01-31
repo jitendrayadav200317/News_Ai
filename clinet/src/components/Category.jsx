@@ -1,14 +1,13 @@
 import React from "react";
 import { Tabs } from "@mantine/core";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ArticleCard from "./ArticleCard";
 import { Skeleton } from "@mantine/core";
 function Category() {
   const [category, setCategory] = useState("general");
-  console.log(category);
   const categories = [
     "General",
     "Sports",
@@ -18,12 +17,15 @@ function Category() {
     "Health",
     "Science",
   ];
+  useEffect(() => {
+    window.scrollTo({ top: 1, behavior: "auto" });
+  }, []);
 
   const fetchNewsByCategory = async ({ pageParam = 1 }) => {
     const response = await axios.get(
       `${
         import.meta.env.VITE_API_URL
-      }/api/news/${category}?page=${pageParam}&pageSize=10`
+      }/api/news/${category}?page=${pageParam}&pageSize=10`,
     );
     return response.data;
   };
@@ -67,7 +69,7 @@ function Category() {
             data?.pages.length >= 0 &&
             data?.pages.reduce(
               (total, page) => total + page.news.length,
-              0 || 0
+              0 || 0,
             )
           }
           next={fetchNextPage}
@@ -99,7 +101,7 @@ function Category() {
                       article={article}
                       category={category}
                     />
-                  ))
+                  )),
                 )}
             </div>
           )}

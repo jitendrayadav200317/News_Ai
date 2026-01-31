@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Eye, Bookmark, Sparkles, Copy, Share2 } from "lucide-react";
+import { Eye, Bookmark, Sparkles, Copy, } from "lucide-react";
 import { addBookmarks, removeBookmarks } from "../redux/slice/newsSlice.js";
 import { useDispatch } from "react-redux";
 const ArticleCard = ({ article, category }) => {

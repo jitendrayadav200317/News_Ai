@@ -35,11 +35,11 @@ app.use(cookieParser());
 dbConnect(); //connect to db
 app.use(
   cors({
-    origin: "https://news-ai-beta.vercel.app/login",
-    // origin: "http://localhost:5173",
+    // origin: "https://news-ai-beta.vercel.app/login",
+    origin: "http://localhost:5173",
 
     credentials: true,
-  })
+  }),
 );
 // google auth
 admin.initializeApp({
@@ -62,7 +62,7 @@ const fetchNewsAndStore = async () => {
   for (let country of countries) {
     for (let category of categories) {
       const { data } = await axios.get(
-        `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`
+        `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`,
       );
       //  if news alrady exgist then delile the news ans save the new news
       if (data.articles && data.articles.length > 0) {
@@ -97,7 +97,7 @@ const fetchNewsAndStore = async () => {
   }
 };
 
-//cron.schedule('*/20 * * * *',fetchNewsAndStore);
+cron.schedule("*/20 * * * *", fetchNewsAndStore);
 
 app.get("/", (req, res) => {
   res.send("HomePage");

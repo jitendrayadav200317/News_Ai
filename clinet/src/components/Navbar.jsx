@@ -28,7 +28,7 @@ function Navbar() {
           {[
             { name: "Home", path: "/" },
             { name: "News", path: "/NewsPage" },
-            // { name: "World", path: "/world" },
+            { name: "World", path: "/world" },
             { name: "About", path: "/about" },
           ].map((item) => (
             <motion.li
@@ -52,7 +52,7 @@ function Navbar() {
               <Link to="/login">
                 <Button variant="white">Login</Button>
               </Link>
-              <Link to="register">
+              <Link to="/register">
                 <Button variant="white">Register</Button>
               </Link>
             </div>

@@ -24,17 +24,17 @@ export const login = async (req, res) => {
     }
     // tolen  sprit => name id email
     const token = jwt.sign(
-      { id: user._id, name: user.name, user: user.email },
+      { id: user._id, name: user.name, email: user.email },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
-      }
+      },
     );
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      secure: true,
+      sameSite: "lax",
+      secure: false,
     });
     res.status(200).json({
       preferences: user.preferences,
@@ -56,12 +56,14 @@ export const verify = async (req, res) => {
         .status(401)
         .json({ authenticated: false, message: "unauthorize" });
     }
-    Henv;
+
     return res.status(200).json({
       authenticated: true,
-      id: req.user.id,
-      name: req.user.name,
+      id: req.user._id,
       email: req.user.email,
+      name: req.user.name,
+      preferences: req.user.preferences || [],
+      message: "Login successful",
     });
   } catch (error) {
     console.error("Verification Error:", error);
@@ -115,7 +117,7 @@ export const googleLogin = async (req, res) => {
       user = await User.create({
         name: decodedToken.name,
         email: decodedToken.email,
-        password: crypto.randomUUID(), // placeholder (won’t be used)
+        password: crypto.randomUUID(),
         preferences: [],
       });
     }
@@ -128,7 +130,7 @@ export const googleLogin = async (req, res) => {
         name: user.name,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     // Set cookie (15 days)

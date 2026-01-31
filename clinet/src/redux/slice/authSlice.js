@@ -119,7 +119,7 @@ const authSlice = createSlice({
           "preferences",
           JSON.stringify(action.payload.preferences)
         );
-        // set coolies local
+        // set cookies local
         setCookies("isAuthenticated", action.payload.authenticated);
         setCookies("email", action.payload.email);
         setCookies("name", action.payload.name);
