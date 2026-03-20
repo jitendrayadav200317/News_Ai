@@ -7,7 +7,6 @@ export const preferences = async (req, res) => {
     const { id } = req.params;
     const { preferences } = req.body;
     const user = await User.findById(id);
-    // user.preferences = [...preferences];
     user.preferences = [...user.preferences, ...preferences];
     await user.save();
     res.status(200).json({
@@ -24,7 +23,7 @@ export const fetchNewsByCategory = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://newsapi.org/v2/top-headlines?page=${page}&pageSize=${pageSize}&category=${category}&country=us&apiKey=${process.env.NEWS_API_KEY}`
+      `https://newsapi.org/v2/top-headlines?page=${page}&pageSize=${pageSize}&category=${category}&country=us&apiKey=${process.env.NEWS_API_KEY}`,
     );
 
     res.status(200).json({
