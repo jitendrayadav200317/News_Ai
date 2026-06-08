@@ -13,7 +13,6 @@ import bookmarksRoutes from "./routes/bookmarksRoutes.js";
 import readingHistoryRoutes from "./routes/readingHistoryRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import News from "./model/News.js";
-// import serviceAccount  from './key/key.json' with{type:"json"};
 
 const serviceAccount = {
   type: process.env.FIREBASE_TYPE,
@@ -37,8 +36,6 @@ app.use(
   cors({
     // origin: "https://news-ai-beta.vercel.app/login",
     origin: "http://localhost:5173",
-
-    credentials: true,
   }),
 );
 // google auth
