@@ -11,7 +11,7 @@ const initialState = {
   loading: false,
   authenticated: getCookies("isAuthenticated") || false,
   name: getCookies("name") || null,
-  id: getCookies("id") || null,
+  id: getCookies("id") || null,x
   email: getCookies("email") || null,
   preferences: JSON.parse(localStorage.getItem("preferences")) || [],
 };

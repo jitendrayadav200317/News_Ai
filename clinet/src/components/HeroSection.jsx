@@ -8,7 +8,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 max-w-4xl">
         <motion.h1
-          className="text-4xl md:text-7xl font-[900] leading-tight"
+          className="text-4xl md:text-7xl font[900] leading-tight"
           style={{ fontFamily: 'PolySans Bulky' }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
